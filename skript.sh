@@ -1,8 +1,8 @@
 #!/bin/bash
 if [ -e c.o ] ; then
-    echo "c'est good"
+    echo "le fichier c compilé existe"
 else
-    echo "c'est pas good"
+    echo "le fichier c compilé n'existe pas"
     gcc -o c.o c.c
     if [ -e c.o ] ; then
 		echo "l'élément a bien été compiled"
@@ -27,7 +27,7 @@ for var in $(seq 1 "$#") ; do
 		'-h') echo "on veut l'altitude" ; h=1 ;;
 		# GEOGRAPHIE DES DONNES A FILTRER AVANT D'ENVOYER AU C
 		'-F') echo "France métropolitaine" ; F=1 ;;
-		'-G') echo "Guyane" ; G=1 ;; 
+		'-G') echo "Guyane" ; G=1 ; touch guyane.csv ; grep 81408 meteo_filtered_data_v1.csv > guyane.csv ;;
 		'-S') echo "Saint-Pierre et Michelin" ; S=1;;
 		'-A') echo "Antilles" ; A=1 ;;
 		'-O') echo "Ocean indien" ; O=1 ;;
