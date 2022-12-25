@@ -27,11 +27,11 @@ for var in $(seq 1 "$#") ; do
 		'-h') echo "on veut l'altitude" ; h=1 ;;
 		# GEOGRAPHIE DES DONNES A FILTRER AVANT D'ENVOYER AU C
 		'-F') echo "France métropolitaine" ; F=1 ;;
-		'-G') echo "Guyane" ; G=1 ; touch guyane.csv ; grep 81408 meteo_filtered_data_v1.csv > guyane.csv ;;
-		'-S') echo "Saint-Pierre et Michelin" ; S=1;;
-		'-A') echo "Antilles" ; A=1 ;;
-		'-O') echo "Ocean indien" ; O=1 ;;
-		'-Q') echo "Antartique" ; Q=1 ;;
+		'-G') echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415'  meteo_filtered_data_v1.csv > guyane.csv ;;
+		'-S') echo "Saint-Pierre et Michelin" ; S=1 ; grep 71805 meteo_filtered_data_v1 > saint_pierre.csv ;;
+		'-A') echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' meteo_filtered_data_v1 > antilles.csv ;;
+		'-O') echo "Ocean indien" ; O=1 ; grep -E '61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1 > ocean_indien.csv ;;
+		'-Q') echo "Antarctique" ; Q=1 ; grep -E '89642|61998' meteo_filtered_data_v1 > antarctique.csv ;;
 		# TYPE DE TRI DEMANDE 
 		'--tab') echo "Le type de tri demandé est par un tableau ou une liste chainée" ; tab=1 ;;
 		'--abr') echo "Le type de tri demandé est un abr" ; abr=1 ;;
