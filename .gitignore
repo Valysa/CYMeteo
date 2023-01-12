@@ -1,2 +1,3 @@
-meteo_filtered_data_v1.csv
+*.csv
 *.o
+c
