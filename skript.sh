@@ -27,7 +27,7 @@ for var in $(seq 1 "$#") ; do
 		# GEOGRAPHIE DES DONNES A FILTRER AVANT D'ENVOYER AU C
 		'-F') echo "France métropolitaine" ; F=1 ;;
 		'-G') echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415'  meteo_filtered_data_v1.csv > area.csv ;;
-		'-S') echo "Saint-Pierre et Michelin" ; S=1 ; grep 71805 meteo_filtered_data_v1 > area.csv ;;
+		'-S') echo "Saint-Pierre et Michelin" ; S=1 ; grep "71805" meteo_filtered_data_v1.csv > area.csv ;;
 		'-A') echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' meteo_filtered_data_v1 > area.csv ;;
 		'-O') echo "Ocean indien" ; O=1 ; grep -E '61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1 > area.csv ;;
 		'-Q') echo "Antarctique" ; Q=1 ; grep -E '89642|61998' meteo_filtered_data_v1 > area.csv ;;
@@ -50,8 +50,42 @@ if [ "$var" -eq 0 ]; then
 	echo "il n'y a pas de manière de trier demandé, le choix par défaut est donc l'avl"
 	avl=1
 fi
+mode=0
+if [ "$tab" -eq 1 ] ; then
+	mode=3
+fi
+if [ "$abr" -eq 1 ] ; then
+	mode=2
+fi
+if [ "$avl" -eq 1 ] ; then
+	mode=1
+fi
 for var in nbExecC ; do
-	if [ "$t1" -eq 1 ] || [ "$t2" -eq 1 ] || [ "$t3" -eq 1 ]; then
-		./c.o -t
+	if [ "$t1" -eq 1 ]; then
+		./c.o -t "$mode"
+	fi
+	if [ "$t2" -eq 1 ]; then
+		./c.o -y "$mode"
+	fi
+	if [ "$t3" -eq 1 ]; then
+		./c.o -u "$mode"
+	fi
+	if [ "$p1" -eq 1 ]; then
+		./c.o -p "$mode" 
+	fi
+	if [ "$p2" -eq 1 ]; then
+		./c.o -q "$mode"
+	fi
+	if [ "$t3" -eq 1 ]; then
+		./c.o -s "$mode"
+	fi
+	if [ "$w" -eq 1 ]; then
+		./c.o -w "$mode"
+	fi
+	if [ "$m" -eq 1 ]; then
+		./c.o -m "$mode"
+	fi
+	if [ "$h" -eq 1 ]; then
+		./c.o -h "$mode"
 	fi
 done

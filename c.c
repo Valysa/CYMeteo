@@ -33,6 +33,7 @@ void checkTri(char* pArg){
 		case '3': printf("tab"); break;
 		default: printf("avl"); break;
 	}
+	puts("");
 }
 
 int main(int argc, char **argv) {
