@@ -60,32 +60,42 @@ fi
 if [ "$avl" -eq 1 ] ; then
 	mode=1
 fi
+cut -f 1 area.csv > data.csv
 for var in nbExecC ; do
-	if [ "$t1" -eq 1 ]; then
+	if [ "$t1" -eq 1 ] ; then
+		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > data.txt ;
 		./c.o -t "$mode"
 	fi
 	if [ "$t2" -eq 1 ]; then
+		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > data.txt ;
 		./c.o -y "$mode"
 	fi
 	if [ "$t3" -eq 1 ]; then
+		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > data.txt ;
 		./c.o -u "$mode"
 	fi
 	if [ "$p1" -eq 1 ]; then
+		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area.csv > data.txt ;
 		./c.o -p "$mode" 
 	fi
 	if [ "$p2" -eq 1 ]; then
+		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area.csv > data.txt ;
 		./c.o -q "$mode"
 	fi
 	if [ "$t3" -eq 1 ]; then
+		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area.csv > data.txt ;
 		./c.o -s "$mode"
 	fi
 	if [ "$w" -eq 1 ]; then
+		cut -d ';' -f 1,4,5 --output-delimiter=';' area.csv > data.txt ;
 		./c.o -w "$mode"
 	fi
 	if [ "$m" -eq 1 ]; then
+		cut -d ';' -f 1,6 --output-delimiter=';' area.csv > data.txt ;
 		./c.o -m "$mode"
 	fi
 	if [ "$h" -eq 1 ]; then
+		cut -d ';' -f 1,14 --output-delimiter=';' area.csv > data.txt ;
 		./c.o -h "$mode"
 	fi
 done
