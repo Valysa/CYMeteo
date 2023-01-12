@@ -44,7 +44,10 @@ int main(int argc, char **argv) {
 	puts("");
 	checkTri(*(argv+2));
 	FILE *fichier=NULL;
-	fichier = fopen("data.csv", "w+");
+	fichier = fopen("area.csv", "w+");
+	if(fichier==NULL){
+		exit(3);
+	}
 	fclose(fichier); 
 	return 0 ;
 }
