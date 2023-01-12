@@ -1,16 +1,15 @@
 #!/bin/bash
-# if [ -e c.o ] ; then
-    # echo "le fichier c compilé existe"
-# else
-    # echo "le fichier c compilé n'existe pas"
-    # gcc -o c.o c.c
-    # if [ -e c.o ] ; then
-		# echo "l'élément a bien été compiled"
-	# else
-		# echo "ba carrément la compilation elle marche pas il se passe des bails sombres avec le gcc"
-	# fi
-# fi
-# ./c.o #launch the .c file
+if [ -e c.o ] ; then
+    echo "le fichier c compilé existe"
+else
+    echo "le fichier c compilé n'existe pas"
+    gcc -o c.o c.c
+    if [ -e c.o ] ; then
+		echo "l'élément a bien été compiled"
+	 else
+		 echo "ba carrément la compilation elle marche pas il se passe des bails sombres avec le gcc"
+	 fi
+ fi
 t1=0 ; t2=0 ; t3=0 ; p1=0 ; p2=0 ; p3=0 ; w=0 ; m=0 ; h=0 ; F=0 ; G=0 ; S=0 ; A=0 ; O=0 ; Q=0 ; tab=0 ; abr=0 ; avl=0 ;
 var=0 ; nbExecC=0 ;
 for var in $(seq 1 "$#") ; do
@@ -48,11 +47,11 @@ if [ "$var" -ge 2 ]; then
 	exit 1
 fi
 if [ "$var" -eq 0 ]; then
-	echo "il n'y a pas de manière de trier demandé le choix par défaut est donc l'avl"
+	echo "il n'y a pas de manière de trier demandé, le choix par défaut est donc l'avl"
 	avl=1
 fi
 for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] || [ "$t2" -eq 1 ] || [ "$t3" -eq 1 ]; then
-		./c.c -t 1
+		./c.o -t
 	fi
 done
