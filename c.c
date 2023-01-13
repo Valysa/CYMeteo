@@ -3,13 +3,13 @@
 #include <stdlib.h>
 
 typedef struct tree{
-	int value;
+	float value;
 	struct tree* pLeft;
 	struct tree* pRight;
 	int equilibre;
 }TreeNode;
 
-TreeNode* createTree(int val){
+TreeNode* createTree(float val){
 	TreeNode* pTree=malloc(sizeof(TreeNode));
 	if(pTree==NULL){
 		exit(1);
@@ -27,7 +27,7 @@ int isEmpty(TreeNode* pTree){ //estVide
 
 void process(TreeNode* pTree){
 	if(!isEmpty(pTree)){
-		printf("|%d, %d", pTree->value, pTree->equilibre);
+		printf("|%f", pTree->value);
 	}
 }
 
@@ -141,7 +141,7 @@ TreeNode* equilibrerAVL(TreeNode* pTree){
 	return pTree;
 }		
 
-TreeNode* insertionAVL(TreeNode* pTree, int val, int* h){
+TreeNode* insertionAVL(TreeNode* pTree, float val, int* h){
 	if(pTree==NULL){
 		*h=1;
 		return createTree(val);
@@ -171,34 +171,36 @@ TreeNode* insertionAVL(TreeNode* pTree, int val, int* h){
 }
 
 void SortAVL(){
+	puts("ok");
 	TreeNode* pRoot=NULL;
 	int eq=0, i=0;
 	float x=0;
 	int* p1=&eq;
 	int c='a';
 	FILE *fp=NULL;
-	fp = fopen("data.txt", "rwx+");
+	fp = fopen("data.txt", "r");
 	if(fp==NULL){
 		exit(3);
 	}
-	puts("cdrebvl");
 	while(c!=EOF){
 		while(c!=';'){
 			fseek(fp, i, SEEK_SET);
 			i++;
 			c=fgetc(fp);
 		}
-		i++;
 		fseek(fp, i, SEEK_SET);
 		fscanf(fp, "%f", &x); 
 		pRoot=insertionAVL(pRoot, x, p1);
-		while(c!='\n'){
+		printf("%f", x);
+		puts("");
+		while(c!='\n' && c!=EOF) {
 			fseek(fp, i, SEEK_SET);
 			i++;
 			c=fgetc(fp);
 		}
 	}
-	walkthrough_inf(pRoot);
+	puts("fin");
+	//walkthrough_inf(pRoot);
 }
 
 void checkArg(char* pArg){
@@ -223,11 +225,10 @@ void checkArg(char* pArg){
 }
 
 void checkTri(char* pArg){
-	if(pArg==NULL) {
-		exit(4);
-	}
 	switch(pArg[0]){
-		case '1': printf("avl"); SortAVL(); break;
+		case '1': 
+			printf("avl"); 
+			SortAVL(); break;
 		case '2': printf("abr"); break;
 		case '3': printf("tab"); break;
 		default: printf(" mode par défaut avl"); break;
@@ -242,6 +243,8 @@ int main(int argc, char **argv) {
 	}
 	checkArg(*(argv+1));
 	puts("");
-	checkTri(*(argv+2));
+	if(argc==3){
+		checkTri(*(argv+2));
+	}
 	return 0 ;
 }
