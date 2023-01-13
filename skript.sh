@@ -6,31 +6,78 @@ else
     gcc -o c.o c.c
     if [ -e c.o ] ; then
 		echo "l'élément a bien été compiled"
-	 else
-		 echo "ba carrément la compilation elle marche pas il se passe des bails sombres avec le gcc"
-	 fi
- fi
+	else
+		echo "ba carrément la compilation elle marche pas il se passe des bails sombres avec le gcc"
+	fi
+fi
+
+test (){
+	if [ $1 -eq 1 ] ; then
+		echo "l'argument n'a pas lieu d'être passé plusieurs fois en paramètre"
+		return 1
+	fi
+	return 0
+}
+
+testArea (){
+	if [ $1 -eq 1 ] ; then
+		echo "WOOOOOOO SALE FOU T'A PAS LE DROIT DE DEMANDER PLUSIEURS LOCA DIFFERENTES"
+		return 1
+	fi
+	return 0
+}
+
 t1=0 ; t2=0 ; t3=0 ; p1=0 ; p2=0 ; p3=0 ; w=0 ; m=0 ; h=0 ; F=0 ; G=0 ; S=0 ; A=0 ; O=0 ; Q=0 ; tab=0 ; abr=0 ; avl=0 ;
-var=0 ; nbExecC=0 ;
+var=0 ; nbExecC=0 ; nbLoca=0;
 for var in $(seq 1 "$#") ; do
 	case "${!var}" in
 		# TYPE DE DONNE A ENVOYER AU C
-		'-t1') echo "on veut la température" ; t1=1 ; nbExecC=$((nbExecC+1)) ;;
-		'-t2') echo "on veut la température" ; t2=1 ; nbExecC=$((nbExecC+1)) ;;
-		'-t3') echo "on veut la température" ; t3=1 ; nbExecC=$((nbExecC+1)) ;;
-		'-p1') echo "on veut la pression" ; p1=1 ; nbExecC=$((nbExecC+1)) ;;
-		'-p2') echo "on veut la pression" ; p2=1 ; nbExecC=$((nbExecC+1)) ;;
-		'-p3') echo "on veut la pression" ; p3=1 ; nbExecC=$((nbExecC+1)) ;;
-		'-w') echo "on veut le vent" ; w=1 ; nbExecC=$((nbExecC+1)) ;;
-		'-m') echo "on veut l'humidité" ; m=1 ; nbExecC=$((nbExecC+1)) ;;
-		'-h') echo "on veut l'altitude" ; h=1 ; nbExecC=$((nbExecC+1)) ;;
+		'-t1') if test $t1 ; then 
+					echo "on veut la température" ; t1=1 ; nbExecC=$((nbExecC+1))
+			   fi ;;
+		'-t2') if test $t2 ; then 
+					echo "on veut la température" ; t2=1 ; nbExecC=$((nbExecC+1)) 
+				fi ;;
+		'-t3') if test $t3 ; then 
+					echo "on veut la température" ; t3=1 ; nbExecC=$((nbExecC+1))
+				fi ;;
+		'-p1') if test $p1 ; then 
+					echo "on veut la pression" ; p1=1 ; nbExecC=$((nbExecC+1)) 
+				fi ;;
+		'-p2') if test $p2 ; then 
+					echo "on veut la pression" ; p2=1 ; nbExecC=$((nbExecC+1)) 
+				fi ;;
+		'-p3') if test $p3 ; then 
+					echo "on veut la pression" ; p3=1 ; nbExecC=$((nbExecC+1)) 
+				fi ;;
+		'-w') if test $w ; then 
+					echo "on veut le vent" ; w=1 ; nbExecC=$((nbExecC+1)) 
+				fi ;;
+		'-m') if test $m ; then 
+					echo "on veut l'humidité" ; m=1 ; nbExecC=$((nbExecC+1)) 
+				fi ;;
+		'-h') if test $h ; then 
+					echo "on veut l'altitude" ; h=1 ; nbExecC=$((nbExecC+1)) 
+				fi ;;
 		# GEOGRAPHIE DES DONNES A FILTRER AVANT D'ENVOYER AU C
-		'-F') echo "France métropolitaine" ; F=1 ;;
-		'-G') echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415'  meteo_filtered_data_v1.csv > area.csv ;;
-		'-S') echo "Saint-Pierre et Michelin" ; S=1 ; grep "71805" meteo_filtered_data_v1.csv > area.csv ;;
-		'-A') echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' meteo_filtered_data_v1 > area.csv ;;
-		'-O') echo "Ocean indien" ; O=1 ; grep -E '61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1 > area.csv ;;
-		'-Q') echo "Antarctique" ; Q=1 ; grep -E '89642|61998' meteo_filtered_data_v1 > area.csv ;;
+		'-F') if testArea $nbLoca ; then 
+				echo "France métropolitaine" ; F=1
+			  fi ;;
+		'-G') if testArea $nbLoca ; then 
+				echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1))
+			  fi ;;
+		'-S') if testArea $nbLoca ; then 
+				echo "Saint-Pierre et Michelin" ; S=1 ; grep "71805" meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) 
+			  fi ;;
+		'-A') if testArea $nbLoca ; then 
+				echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) 
+			  fi ;;
+		'-O') if testArea $nbLoca ; then 
+				echo "Ocean indien" ; O=1 ; grep -E '61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) 
+			  fi ;;
+		'-Q') if testArea $nbLoca ; then 
+				echo "Antarctique" ; Q=1 ; grep -E '89642|61998' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) 
+			  fi ;;
 		# TYPE DE TRI DEMANDE
 		'--tab') echo "Le type de tri demandé est par un tableau ou une liste chainée" ; tab=1 ;;
 		'--abr') echo "Le type de tri demandé est un abr" ; abr=1 ;;
@@ -75,7 +122,7 @@ for var in nbExecC ; do
 		./c.o -u "$mode"
 	fi
 	if [ "$p1" -eq 1 ]; then
-		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area.csv > data.txt ;
+		cut -d ';' -f 1,7 --output-delimiter=';' area.csv > data.txt ;
 		./c.o -p "$mode" 
 	fi
 	if [ "$p2" -eq 1 ]; then
