@@ -4,6 +4,15 @@
 
 typedef struct tree{
 	float value;
+	/*int IDstat;
+	int year;
+	int month:
+	int day;
+	int hour;
+	float moisture;
+	float wind;
+	float height;
+	float temperature;*/
 	struct tree* pLeft;
 	struct tree* pRight;
 	int equilibre;
@@ -203,48 +212,84 @@ void SortAVL(){
 	//walkthrough_inf(pRoot);
 }
 
-void checkArg(char* pArg){
-	if(pArg==NULL) {
+void checkFileIn(char* pArg){
+	if(pArg==NULL){
+		exit(4);
+	}
+	if(strcmp(pArg, "-f<data.txt>")!=0){
+		puts("ok1");
+		exit(1);
+	}
+}
+
+void checkFileOut(char* pArg){
+	if(pArg==NULL){
+		exit(4);
+	}
+	if(strcmp(pArg, "-o<tutedebrouille.txt>")!=0){
+		puts("ok2");
+		exit(1);
+	}
+}
+
+void checkMode(char* pArg){
+	if(pArg==NULL){
 		exit(4);
 	}
 	if(pArg[0]!='-'){
 		exit(1);
 	}
 	switch(pArg[1]){
-		case 't': printf("température 1"); break;
-		case 'y': printf("température 2"); break;
-		case 'u': printf("température 3"); break;
-		case 'p': printf("pression 1"); break;
-		case 'q': printf("pression 2"); break;
-		case 's': printf("pression 3"); break;
+		case 't': printf("t1"); break;
+		case 'y': printf("t2"); break;
+		case 'u': printf("t3"); break;
+		case 'p': printf("p1"); break;
+		case 'q': printf("p2"); break;
+		case 's': printf("p3"); break;
 		case 'w': printf("vent"); break;
 		case 'h': printf("altitude"); break;
 		case 'm': printf("humidité"); break;
-		default: printf("Erreur"); exit(1); break;
+		default : printf("erreur"); exit(1);
 	}
 }
 
 void checkTri(char* pArg){
-	switch(pArg[0]){
-		case '1': 
-			printf("avl"); 
-			SortAVL(); break;
-		case '2': printf("abr"); break;
-		case '3': printf("tab"); break;
-		default: printf(" mode par défaut avl"); break;
+	if(strcmp(pArg, "--tab")!=0){
+		puts("ok3");
+		exit(1);
 	}
-	puts("");
+	else if(strcmp(pArg, "--abr")!=0){
+		puts("ok4");
+		exit(1);
+	}
+	else if(strcmp(pArg, "--avl")!=0){
+		puts("ok5");
+		exit(1);
+	}	
+}
+
+void checkReverse(char* pArg){
+	if(strcmp(pArg, "-r")==0){
+		puts("sens décroissant");
+	}
 }
 
 int main(int argc, char **argv) {
-	if(argc!=2 && argc!=3){
+	/*if(argc!=4 && argc!=5 && argc!=6){
 		puts("Erreur de argc");
 		exit(1);
+	}*/
+	puts("hey");
+	checkFileIn(*(argv+1));
+	checkFileOut(*(argv+2));
+	checkMode(*(argv+3));
+	checkTri(*(argv+4));
+	if(argc==4){
+		checkReverse(*(argv+4));
 	}
-	checkArg(*(argv+1));
+	if(argc==5){
+		checkReverse(*(argv+5));
+	}
 	puts("");
-	if(argc==3){
-		checkTri(*(argv+2));
-	}
 	return 0 ;
 }

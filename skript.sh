@@ -120,7 +120,8 @@ echo $nameOutpout
 for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
 		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -t1 --$mode
+		echo "test"
+		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -t --$mode
 	fi
 	if [ "$t2" -eq 1 ]; then
 		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > $nameOutpout ;
