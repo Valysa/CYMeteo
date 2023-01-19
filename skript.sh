@@ -65,19 +65,19 @@ for var in $(seq 1 "$#") ; do
 				echo "France métropolitaine" ; F=1
 			  fi ;;
 		'-G') if testArea $nbLoca ; then 
-				echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ; nameOutpout=Guyane.txt
+				echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  # nameOutpout=Guyane.txt
 			  fi ;;
 		'-S') if testArea $nbLoca ; then 
-				echo "Saint-Pierre et Michelin" ; S=1 ; grep "71805" meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1))  ; nameOutpout=Saint_Pierre_Et_Miquelon.txt
+				echo "Saint-Pierre et Michelin" ; S=1 ; grep "71805" meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1))  ;  # nameOutpout=Saint_Pierre_Et_Miquelon.txt
 			  fi ;;
 		'-A') if testArea $nbLoca ; then 
-				echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ; nameOutpout=Antilles.txt
+				echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ; # nameOutpout=Antilles.txt
 			  fi ;;
 		'-O') if testArea $nbLoca ; then 
-				echo "Ocean indien" ; O=1 ; grep -E '61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ; nameOutpout=Ocean_Indien.txt
+				echo "Ocean indien" ; O=1 ; grep -E '61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ; # nameOutpout=Ocean_Indien.txt
 			  fi ;;
 		'-Q') if testArea $nbLoca ; then 
-				echo "Antarctique" ; Q=1 ; grep -E '89642|61998' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ; nameOutpout=Antarctique.txt
+				echo "Antarctique" ; Q=1 ; grep -E '89642|61998' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ; # nameOutpout=Antarctique.txt
 			  fi ;;
 		# TYPE DE TRI DEMANDE
 		'--tab') echo "Le type de tri demandé est par un tableau ou une liste chainée" ; tab=1 ;;
@@ -116,43 +116,43 @@ if [ "$avl" -eq 1 ] ; then
 	mode=avl
 fi
 echo $mode
-echo $nameOutpout
+# echo $nameOutpout
 for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
-		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > $nameOutpout ;
+		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > data.txt ;
 		echo "test"
-		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -t --$mode
+		./c.o -f<data.txt> -o<tutedebrouille.txt> -t --$mode
 	fi
 	if [ "$t2" -eq 1 ]; then
 		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -t2 --$mode
+		./c.o -f<data.txt> -o<tutedebrouille.txt> -t2 --$mode
 	fi
 	if [ "$t3" -eq 1 ]; then
 		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -t3 --$mode
+		./c.o -f<data.txt> -o<tutedebrouille.txt> -t3 --$mode
 	fi
 	if [ "$p1" -eq 1 ]; then
 		cut -d ';' -f 1,7 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -p1 --$mode
+		./c.o -f<data.txt> -o<tutedebrouille.txt> -p1 --$mode
 	fi
 	if [ "$p2" -eq 1 ]; then
 		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -p2 --$mode
+		./c.o -f<data.txt> -o<tutedebrouille.txt> -p2 --$mode
 	fi
 	if [ "$t3" -eq 1 ]; then
 		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -p3 --$mode
+		./c.o -f<data.txt> -o<tutedebrouille.txt> -p3 --$mode
 	fi
 	if [ "$w" -eq 1 ]; then
 		cut -d ';' -f 1,4,5 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -w --$mode
+		./c.o -f<data.txt> -o<tutedebrouille.txt> -w --$mode
 	fi
 	if [ "$m" -eq 1 ]; then
 		cut -d ';' -f 1,6 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -m --$mode
+		./c.o -f<data.txt> -o<tutedebrouille.txt> -m --$mode
 	fi
 	if [ "$h" -eq 1 ]; then
 		cut -d ';' -f 1,14 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<$nameOutpout> -o<tutedebrouille.txt> -h --$mode
+		./c.o -f<data.txt> -o<tutedebrouille.txt> -h --$mode
 	fi
 done

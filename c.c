@@ -216,17 +216,18 @@ void checkFileIn(char* pArg){
 	if(pArg==NULL){
 		exit(4);
 	}
-	if(strcmp(pArg, "-f<data.txt>")!=0){
+	if(strcmp(pArg, "-f <data.txt>")!=0){
 		puts("ok1");
 		exit(1);
 	}
+	puts("yes");
 }
 
 void checkFileOut(char* pArg){
 	if(pArg==NULL){
 		exit(4);
 	}
-	if(strcmp(pArg, "-o<tutedebrouille.txt>")!=0){
+	if(strcmp(pArg, "-o <tutedebrouille.txt>")!=0){
 		puts("ok2");
 		exit(1);
 	}
@@ -254,34 +255,37 @@ void checkMode(char* pArg){
 }
 
 void checkTri(char* pArg){
-	if(strcmp(pArg, "--tab")!=0){
-		puts("ok3");
-		exit(1);
+	if(strcmp(pArg, "--tab")==0){
+		puts("tab");
 	}
-	else if(strcmp(pArg, "--abr")!=0){
-		puts("ok4");
-		exit(1);
+	else if(strcmp(pArg, "--abr")==0){
+		puts("abr");
 	}
-	else if(strcmp(pArg, "--avl")!=0){
-		puts("ok5");
-		exit(1);
-	}	
+	else if(strcmp(pArg, "--avl")==0){
+		puts("avl");
+	}
+	else{
+		puts("avl par défaut");
+	}
 }
 
 void checkReverse(char* pArg){
 	if(strcmp(pArg, "-r")==0){
 		puts("sens décroissant");
 	}
+	puts("sens croissant");
 }
 
-int main(int argc, char **argv) {
-	/*if(argc!=4 && argc!=5 && argc!=6){
+int main(int argc, char **argv){
+	/*if(argc!=3 && argc!=4 && argc!=5){
 		puts("Erreur de argc");
 		exit(1);
 	}*/
-	puts("hey");
-	checkFileIn(*(argv+1));
+	printf("%s", argv[1]);
+	printf("%s", argv[2]);
+	/*checkFileIn(*(argv+1));
 	checkFileOut(*(argv+2));
+	puts("hey");
 	checkMode(*(argv+3));
 	checkTri(*(argv+4));
 	if(argc==4){
@@ -290,6 +294,6 @@ int main(int argc, char **argv) {
 	if(argc==5){
 		checkReverse(*(argv+5));
 	}
-	puts("");
+	puts("");*/
 	return 0 ;
 }
