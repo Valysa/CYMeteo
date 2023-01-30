@@ -40,11 +40,11 @@ void process(TreeNode* pTree){
 	}
 }
 
-void walkthrough_inf(TreeNode* pTree){ //parcours infixe
+void walkthrough_inf(TreeNode* pTree, FILE *fp1){ //parcours infixe
 	if(!isEmpty(pTree)){
-		walkthrough_inf(pTree->pLeft);
-		process(pTree);
-		walkthrough_inf(pTree->pRight);
+		walkthrough_inf(pTree->pLeft, fp1);
+		fprintf(fp1, "%f\n", pTree->value);
+		walkthrough_inf(pTree->pRight, fp1);
 	}
 }
 
@@ -179,8 +179,21 @@ TreeNode* insertionAVL(TreeNode* pTree, float val, int* h){
 	return pTree;
 }
 
+void createFileOut(TreeNode* pTree){
+	if(pTree==NULL){
+		exit(1);
+	}
+	FILE *fp1=NULL;
+	fp1 = fopen("tutedebrouille.txt", "w+");
+	if(fp1==NULL){
+		exit(3);
+	}
+	walkthrough_inf(pTree, fp1);
+	fclose(fp1);
+}
+	
 void SortAVL(){
-	puts("ok");
+	puts("\nok");
 	TreeNode* pRoot=NULL;
 	int eq=0, i=0;
 	float x=0;
@@ -192,6 +205,7 @@ void SortAVL(){
 		exit(3);
 	}
 	while(c!=EOF){
+		puts("stop");
 		while(c!=';'){
 			fseek(fp, i, SEEK_SET);
 			i++;
@@ -202,34 +216,48 @@ void SortAVL(){
 		pRoot=insertionAVL(pRoot, x, p1);
 		printf("%f", x);
 		puts("");
-		while(c!='\n' && c!=EOF) {
+		while(c!='\n' || c!=EOF) {
 			fseek(fp, i, SEEK_SET);
 			i++;
 			c=fgetc(fp);
+			printf("\n%d", c);
+			exit(1);
+			//printf("(%d)\n", c);
 		}
 	}
+	fclose(fp);
 	puts("fin");
-	//walkthrough_inf(pRoot);
+	createFileOut(pRoot);
 }
 
 void checkFileIn(char* pArg){
 	if(pArg==NULL){
 		exit(4);
 	}
-	if(strcmp(pArg, "-fdata.txt")!=0){
+	if(pArg[0]!='-' || pArg[1]!='f'){
 		puts("Erreur sur le nom du fichier entrant");
 		exit(1);
 	}
+	int n=strlen(pArg);
+	for(int i=0; i<n; i++){
+		pArg[i]=pArg[i+2];
+	}
+	printf("\n(%s)", pArg);
 }
 
 void checkFileOut(char* pArg){
 	if(pArg==NULL){
 		exit(4);
 	}
-	if(strcmp(pArg, "-otutedebrouille.txt")!=0){
+	if(pArg[0]!='-' || pArg[1]!='o'){
 		puts("Erreur sur le nom du fichier sortant");
 		exit(1);
 	}
+	int n=strlen(pArg);
+	for(int i=0; i<n; i++){
+		pArg[i]=pArg[i+2];
+	}
+	printf("\n(%s)", pArg);
 }
 
 void checkMode(char* pArg){
@@ -328,5 +356,9 @@ int main(int argc, char **argv){
 		}
 	}
 	puts("");
+	printf("%s", argv[1]);
+	puts("");
+	printf("%s", argv[2]);
+	SortAVL();
 	return 0 ;
 }
