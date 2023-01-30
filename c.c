@@ -216,19 +216,18 @@ void checkFileIn(char* pArg){
 	if(pArg==NULL){
 		exit(4);
 	}
-	if(strcmp(pArg, "-f <data.txt>")!=0){
-		puts("ok1");
+	if(strcmp(pArg, "-fdata.txt")!=0){
+		puts("Erreur sur le nom du fichier entrant");
 		exit(1);
 	}
-	puts("yes");
 }
 
 void checkFileOut(char* pArg){
 	if(pArg==NULL){
 		exit(4);
 	}
-	if(strcmp(pArg, "-o <tutedebrouille.txt>")!=0){
-		puts("ok2");
+	if(strcmp(pArg, "-otutedebrouille.txt")!=0){
+		puts("Erreur sur le nom du fichier sortant");
 		exit(1);
 	}
 }
@@ -237,20 +236,49 @@ void checkMode(char* pArg){
 	if(pArg==NULL){
 		exit(4);
 	}
-	if(pArg[0]!='-'){
+	if(strcmp(pArg, "-t1")==0){
+		puts("ok t1");
+	}
+	else if(strcmp(pArg, "-t2")==0){
+		puts("ok t2");
+	}
+	else if(strcmp(pArg, "-t3")==0){
+		puts("ok t3");
+	}
+	else if(strcmp(pArg, "-p1")==0){
+		puts("ok p1");
+	}
+	else if(strcmp(pArg, "-p2")==0){
+		puts("ok p2");
+	}
+	else if(strcmp(pArg, "-p3")==0){
+		puts("ok p3");
+	}
+	else if(strcmp(pArg, "-w")==0){
+		puts("ok w");
+	}
+	else if(strcmp(pArg, "-h")==0){
+		puts("ok h");
+	}
+	else if(strcmp(pArg, "-m")==0){
+		puts("ok m");
+	}
+	else{
+		puts("erreur mode");
 		exit(1);
 	}
-	switch(pArg[1]){
-		case 't': printf("t1"); break;
-		case 'y': printf("t2"); break;
-		case 'u': printf("t3"); break;
-		case 'p': printf("p1"); break;
-		case 'q': printf("p2"); break;
-		case 's': printf("p3"); break;
-		case 'w': printf("vent"); break;
-		case 'h': printf("altitude"); break;
-		case 'm': printf("humidité"); break;
-		default : printf("erreur"); exit(1);
+}
+
+void checkReverse(char* pArg){
+	if(strcmp(pArg, "-r")==0){
+		puts("sens décroissant");
+	}
+	else if(pArg!=NULL){
+		puts("Erreur du sens de tri");
+		exit(1);
+	}
+	else{
+		puts("sens croissant");
 	}
 }
 
@@ -264,36 +292,41 @@ void checkTri(char* pArg){
 	else if(strcmp(pArg, "--avl")==0){
 		puts("avl");
 	}
+	else if(strcmp(pArg, "-r")!=0){ //si le mode de tri n'est pas demandé et que -r est demandé
+		puts("Erreur de tri");
+		exit(1);
+	}
 	else{
 		puts("avl par défaut");
+		checkReverse(pArg);
 	}
-}
-
-void checkReverse(char* pArg){
-	if(strcmp(pArg, "-r")==0){
-		puts("sens décroissant");
-	}
-	puts("sens croissant");
 }
 
 int main(int argc, char **argv){
-	/*if(argc!=3 && argc!=4 && argc!=5){
+	if(argc!=4 && argc!=5 && argc!=6){
 		puts("Erreur de argc");
 		exit(1);
-	}*/
+	}
 	printf("%s", argv[1]);
+	puts("");
 	printf("%s", argv[2]);
-	/*checkFileIn(*(argv+1));
+	puts("");
+	printf("%s", argv[3]);
+	printf("\n%d", argc);
+	checkFileIn(*(argv+1));
 	checkFileOut(*(argv+2));
 	puts("hey");
 	checkMode(*(argv+3));
-	checkTri(*(argv+4));
+	puts("cool");
 	if(argc==4){
-		checkReverse(*(argv+4));
+		puts("mode avl par défaut");
 	}
-	if(argc==5){
-		checkReverse(*(argv+5));
+	if(argc>=5){
+		checkTri(*(argv+4));
+		if(argc==6){
+			checkReverse(*(argv+5));
+		}
 	}
-	puts("");*/
+	puts("");
 	return 0 ;
 }
