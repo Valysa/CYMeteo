@@ -27,10 +27,11 @@ testArea (){
 	return 0
 }
 
-t1=0 ; t2=0 ; t3=0 ; p1=0 ; p2=0 ; p3=0 ; w=0 ; m=0 ; h=0 ; F=0 ; G=0 ; S=0 ; A=0 ; O=0 ; Q=0 ; tab=0 ; abr=0 ; avl=0 ;
-var=0 ; nbExecC=0 ; nbLoca=0;
+t1=0 ; t2=0 ; t3=0 ; p1=0 ; p2=0 ; p3=0 ; w=0 ; m=0 ; h=0 ; F=0 ; G=0 ; S=0 ; A=0 ; O=0 ; Q=0 ; tab=0 ; abr=0 ; avl=0 ; d=0;
+var=0 ; nbExecC=0 ; nbLoca=0; nbarg=0; sday=0 ; smonth=0 ; syear=0 ; eday=0; emonth=0; eyear=0; sdate=0; edate=0;
 nameOutpout=data.txt
 for var in $(seq 1 "$#") ; do
+	nbarg=$((nbarg+1))
 	case "${!var}" in
 		# TYPE DE DONNE A ENVOYER AU C
 		'-t1') if test $t1 ; then 
@@ -60,25 +61,31 @@ for var in $(seq 1 "$#") ; do
 		'-h') if test $h ; then 
 					echo "on veut l'altitude" ; h=1 ; nbExecC=$((nbExecC+1)) 
 				fi ;;
-		# GEOGRAPHIE DES DONNES A FILTRER AVANT D'ENVOYER AU C
+		# RECUPERATION DES DONNEES GEOGRAPHIQUES
 		'-F') if testArea $nbLoca ; then 
-				echo "France métropolitaine" ; F=1
+				echo "France métropolitaine" ; F=1 ; grep -E '81408|81401|81405|81415|71805|78894|78890|78897|78925|78922|61997|61996|61972|61980|61976|67005|61968|89642|61998' -v  meteo_filtered_data_v1.csv > area.csv ; nbLoa=$((nbLoca+1)) ; nameOutpout=France.txt 
 			  fi ;;
 		'-G') if testArea $nbLoca ; then 
-				echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  # nameOutpout=Guyane.txt
+				echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;   nameOutpout=Guyane.txt
 			  fi ;;
 		'-S') if testArea $nbLoca ; then 
-				echo "Saint-Pierre et Michelin" ; S=1 ; grep "71805" meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1))  ;  # nameOutpout=Saint_Pierre_Et_Miquelon.txt
+				echo "Saint-Pierre et Michelin" ; S=1 ; grep "71805" meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1))  ;   nameOutpout=Saint_Pierre_Et_Miquelon.txt
 			  fi ;;
 		'-A') if testArea $nbLoca ; then 
-				echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ; # nameOutpout=Antilles.txt
+				echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antilles.txt
 			  fi ;;
 		'-O') if testArea $nbLoca ; then 
-				echo "Ocean indien" ; O=1 ; grep -E '61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ; # nameOutpout=Ocean_Indien.txt
+				echo "Ocean indien" ; O=1 ; grep -E '61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Ocean_Indien.txt
 			  fi ;;
 		'-Q') if testArea $nbLoca ; then 
-				echo "Antarctique" ; Q=1 ; grep -E '89642|61998' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ; # nameOutpout=Antarctique.txt
+				echo "Antarctique" ; Q=1 ; grep -E '89642|61998' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antarctique.txt
 			  fi ;;
+		# RECUPERATION DE LA RESTRICTION TEMPORELLE
+		'-d') nbarg=$((nbarg+1)) ; d=1;
+			syear=${!nbarg::4} ; smonth=${!nbarg:5:2} ; sday=${!nbarg:8:2} ; sdate=${!nbarg}T00:00:00+01:00 ;
+			nbarg=$((nbarg+1)) ;
+			eyear=${!nbarg::4} ; emonth=${!nbarg:5:2} ; eday=${!nbarg:8:2} ; edate=${!nbarg}T23:00:00+01:00 ;;
+			????-??-??) ;;
 		# TYPE DE TRI DEMANDE
 		'--tab') echo "Le type de tri demandé est par un tableau ou une liste chainée" ; tab=1 ;;
 		'--abr') echo "Le type de tri demandé est un abr" ; abr=1 ;;
@@ -92,6 +99,14 @@ done
 if [ "$nbExecC" -eq 0 ] ; then
 	echo "vous devez spécifier au moins un type de donnée a traiter, si vous ne savez pas de quoi il s'agit, tapez l'argument -help"
 	exit 1
+fi
+if [ "$d" -eq 1 ] ; then
+	if [ $(date -d "$sdate" +%s) -lt $(date -d "$edate" +%s) ]; then
+		awk -F ";" -v start="$sdate" -v end="$edate" '$2 >= start && $2 <= end {print $0}' area.csv > area_time.csv
+	fi
+	else 
+		echo les dates rentrés ne sont pas valides
+		exit 1
 fi
 var=$(($tab+$abr+$avl))
 echo $var
@@ -119,40 +134,40 @@ echo $mode
 # echo $nameOutpout
 for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
-		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > data.txt ;
+		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv > $nameOutpout ;
 		echo "test"
-		./c.o -f<data.txt> -o<tutedebrouille.txt> -t --$mode
+		./c.o -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$t2" -eq 1 ]; then
-		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<data.txt> -o<tutedebrouille.txt> -t2 --$mode
+		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv > $nameOutpout ;
+		./c.o -f$nameOutpout -odata.txt -t2 --$mode
 	fi
 	if [ "$t3" -eq 1 ]; then
-		cut -d ';' -f 1,11 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<data.txt> -o<tutedebrouille.txt> -t3 --$mode
+		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv > $nameOutpout ;
+		./c.o -f$nameOutpout -odata.txt -t3 --$mode
 	fi
 	if [ "$p1" -eq 1 ]; then
-		cut -d ';' -f 1,7 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<data.txt> -o<tutedebrouille.txt> -p1 --$mode
+		cut -d ';' -f 1,7 --output-delimiter=';' area_time.csv > $nameOutpout ;
+		./c.o -f$nameOutpout -odata.txt -p1 --$mode
 	fi
 	if [ "$p2" -eq 1 ]; then
-		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<data.txt> -o<tutedebrouille.txt> -p2 --$mode
+		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area_time.csv > $nameOutpout ;
+		./c.o -f$nameOutpout -odata.txt -p2 --$mode
 	fi
 	if [ "$t3" -eq 1 ]; then
-		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<data.txt> -o<tutedebrouille.txt> -p3 --$mode
+		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area_time.csv > $nameOutpout ;
+		./c.o -f$nameOutpout -odata.txt -p3 --$mode
 	fi
 	if [ "$w" -eq 1 ]; then
-		cut -d ';' -f 1,4,5 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<data.txt> -o<tutedebrouille.txt> -w --$mode
+		cut -d ';' -f 1,4,5 --output-delimiter=';' area_time.csv > $nameOutpout ;
+		./c.o -f$nameOutpout -odata.txt -w --$mode
 	fi
 	if [ "$m" -eq 1 ]; then
-		cut -d ';' -f 1,6 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<data.txt> -o<tutedebrouille.txt> -m --$mode
+		cut -d ';' -f 1,6 --output-delimiter=';' area_time.csv > $nameOutpout ;
+		./c.o -f$nameOutpout -odata.txt -m --$mode
 	fi
 	if [ "$h" -eq 1 ]; then
-		cut -d ';' -f 1,14 --output-delimiter=';' area.csv > $nameOutpout ;
-		./c.o -f<data.txt> -o<tutedebrouille.txt> -h --$mode
+		cut -d ';' -f 1,14 --output-delimiter=';' area_time.csv > $nameOutpout ;
+		./c.o -f$nameOutpout -odata.txt -h --$mode
 	fi
 done
