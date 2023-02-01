@@ -50,7 +50,8 @@ void process(TreeNode* pTree){
 void walkthrough_inf(TreeNode* pTree, FILE *fp1){ //parcours infixe
 	if(!isEmpty(pTree)){
 		walkthrough_inf(pTree->pLeft, fp1);
-		fprintf(fp1, "%d;%f;%f;%f\n", pTree->IDstat, pTree->moy, pTree->min, pTree->max);
+		fprintf(fp1, "%05d;%f;%f;%f\n", pTree->IDstat, pTree->moy/pTree->value, pTree->min, pTree->max);
+		printf("%f\n", pTree->value);
 		walkthrough_inf(pTree->pRight, fp1);
 	}
 }
@@ -198,7 +199,7 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, int* h){
 	else{ //si l'élément est déjà dans l'arbre
 		*h=0;
 		pTree->value++;
-		pTree->moy=pTree->moy+val;
+		pTree->moy=(pTree->moy+val);
 		pTree->min=minf(pTree->min, val);
 		pTree->max=maxf(pTree->max, val);
 		return pTree;
