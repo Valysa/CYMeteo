@@ -75,10 +75,10 @@ for var in $(seq 1 "$#") ; do
 				echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antilles.txt
 			  fi ;;
 		'-O') if testArea $nbLoca ; then 
-				echo "Ocean indien" ; O=1 ; grep -E '61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Ocean_Indien.txt
+				echo "Ocean indien" ; O=1 ; grep -E '61998|61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Ocean_Indien.txt
 			  fi ;;
 		'-Q') if testArea $nbLoca ; then 
-				echo "Antarctique" ; Q=1 ; grep -E '89642|61998' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antarctique.txt
+				echo "Antarctique" ; Q=1 ; grep -E "89642" meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antarctique.txt
 			  fi ;;
 		# RECUPERATION DE LA RESTRICTION TEMPORELLE
 		'-d') nbarg=$((nbarg+1)) ; d=1;
@@ -135,8 +135,9 @@ echo $mode
 for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
 		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
-		echo "test"
 		./c.o -f$nameOutpout -odata.txt -t1 --$mode
+		echo tentative de gnuplote
+		gnuplot -persist gunupulotu.plt
 	fi
 	if [ "$t2" -eq 1 ]; then
 		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
