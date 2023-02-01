@@ -100,13 +100,56 @@ if [ "$nbExecC" -eq 0 ] ; then
 	echo "vous devez spécifier au moins un type de donnée a traiter, si vous ne savez pas de quoi il s'agit, tapez l'argument -help"
 	exit 1
 fi
-if [ "$d" -eq 1 ] ; then
-	if [ $(date -d "$sdate" +%s) -lt $(date -d "$edate" +%s) ]; then
-		awk -F ";" -v start="$sdate" -v end="$edate" '$2 >= start && $2 <= end {print $0}' area.csv > area_time.csv
+dayTest (){ # month day year
+	if [ $1 -eq "2" ] ; then #fevrier cas
+		if [ $3 -eq "2012" ] || [ $3 -eq "2016" ] || [ $3 -eq "2020" ] ; then # bissextiles years
+			if [ $2 -gt "29" ] ; then
+				echo "Year entered is not valid --help for more informations"
+				exit 1
+			fi
+		else # non bissextile year
+			if [ $2 -gt "28" ] ; then
+				echo "Date entered is not valid --help for more informations"
+				exit 1
+			fi
+		fi
 	fi
-	else 
-		echo les dates rentrés ne sont pas valides
-		exit 1
+	if [ $1 -eq "1" ] || [ $1 -eq "3" ] || [ $1 -eq "3" ] || [ $1 -eq "5" ] || [ $1 -eq "7" ] || [ $1 -eq "8" ] || [ $1 -eq "10" ] || [ $1 -eq "12" ] ; then #31 days months
+		if [ $2 -gt "31" ] ; then
+			echo "Date entered is not valid --help for more informations"
+			exit 1
+		fi
+	else # month with 30 days
+		echo septembre
+		if [ $2 -gt "30" ] ; then
+			echo "Date entered is not valid --help for more informations"
+			exit 1
+		fi
+	fi
+	return 0;
+}
+dateTest (){ #year month day
+	if [ "$1" -ge "2010" ] && [ "$1" -le "2022" ] ; then
+		echo valid year
+		if [ "$2" -ge "0" ] && [ "$2" -le "12" ] ; then
+			echo valid month
+			if dayTest $2 $3 $1 && [ "$3" -ge "0" ] ; then
+				echo valid day
+				return 0
+			fi
+		fi
+	fi
+return 1
+}
+if dateTest $syear $smonth $sday && dateTest $eyear $emonth $eday ; then
+	if [ "$d" -eq 1 ] ; then
+		if [ $(date -d "$sdate" +%s) -lt $(date -d "$edate" +%s) ]; then
+			awk -F ";" -v start="$sdate" -v end="$edate" '$2 >= start && $2 <= end {print $0}' area.csv > area_time.csv
+		fi
+		else 
+			echo date one is greater than date two
+			exit 1
+	fi
 fi
 var=$(($tab+$abr+$avl))
 echo $var

@@ -11,11 +11,11 @@ typedef struct tree{
 	int hour;
 	float moisture;
 	float wind;
-	float height;
 	float temperature;*/
 	float min;
 	float max;
 	float moy;
+	float height;
 	struct tree* pLeft;
 	struct tree* pRight;
 	int equilibre;
@@ -31,13 +31,14 @@ TreeNode* createTree(int n, float val){
 	pTree->min=val;
 	pTree->max=val;
 	pTree->moy=val;
+	pTree->height=val;
 	pTree->pLeft=NULL;
 	pTree->pRight=NULL;
 	pTree->equilibre=0;	
 	return pTree;
 }
 
-int isEmpty(TreeNode* pTree){ //estVide
+int isEmpty(TreeNode* pTree){
 	return (pTree==NULL);
 }
 
@@ -47,12 +48,28 @@ void process(TreeNode* pTree){
 	}
 }
 
-void walkthrough_inf(TreeNode* pTree, FILE *fp1){ //parcours infixe
+void walkthrough_inf_t1(TreeNode* pTree, FILE *fp1){ //mode t1
 	if(!isEmpty(pTree)){
-		walkthrough_inf(pTree->pLeft, fp1);
+		walkthrough_inf_t1(pTree->pLeft, fp1);
 		fprintf(fp1, "%05d;%f;%f;%f\n", pTree->IDstat, pTree->moy/pTree->value, pTree->min, pTree->max);
 		printf("%f\n", pTree->value);
-		walkthrough_inf(pTree->pRight, fp1);
+		walkthrough_inf_t1(pTree->pRight, fp1);
+	}
+}
+
+void walkthrough_inf_h(TreeNode* pTree, FILE *fp1){ //mode h
+	if(!isEmpty(pTree)){
+		walkthrough_inf_h(pTree->pRight, fp1);
+		fprintf(fp1, "%f;%d\n", pTree->height, pTree->IDstat);
+		walkthrough_inf_h(pTree->pLeft, fp1);
+	}
+}
+
+void walkthrough_inf_m(TreeNode* pTree, FILE *fp1){ //mode m
+	if(!isEmpty(pTree)){
+		walkthrough_inf_m(pTree->pRight, fp1);
+		fprintf(fp1, "%f;%d\n", pTree->max, pTree->IDstat);
+		walkthrough_inf_m(pTree->pLeft, fp1);
 	}
 }
 
@@ -217,7 +234,37 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, int* h){
 	return pTree;
 }
 
-void createFileOut(TreeNode* pTree, char *pArg){
+
+TreeNode* insertionAVL_h(TreeNode* pTree, int n, float val, int* h){
+	if(pTree==NULL){
+		*h=1;
+		return createTree(n, val);
+	}
+	else if(pTree->height>val){
+		pTree->pLeft=insertionAVL(pTree->pLeft, n, val, h);
+		*h=-*h;
+	}
+	else if(pTree->height<val){
+		pTree->pRight=insertionAVL(pTree->pRight, n, val, h);
+	}
+	else{ //si l'élément est déjà dans l'arbre
+		*h=0;
+		return pTree;
+	}
+	if(*h!=0){ //si le facteur d'équilibre est différent de 0
+		pTree->equilibre=pTree->equilibre+*h; //mise à jour du facteur d'équilibre
+		pTree=equilibrerAVL(pTree);
+		if(pTree->equilibre==0){ //si l'arbre est de nouveau équilibré
+			*h=0; //ses ancetres ne changent pas
+		}
+		else{
+			*h=1;
+		}
+	}
+	return pTree;
+}
+
+void createFileOut(TreeNode* pTree, char *pArg, char *pArg2){
 	if(pTree==NULL){
 		exit(1);
 	}
@@ -226,11 +273,19 @@ void createFileOut(TreeNode* pTree, char *pArg){
 	if(fp1==NULL){
 		exit(3);
 	}
-	walkthrough_inf(pTree, fp1);
+	if(strcmp(pArg2, "-t1")==0 ||strcmp(pArg2, "-p1")==0){
+		walkthrough_inf_t1(pTree, fp1);
+	}
+	else if(strcmp(pArg2, "-h")==0){
+		walkthrough_inf_h(pTree, fp1);
+	}
+	else if(strcmp(pArg2, "-m")==0){
+		walkthrough_inf_m(pTree, fp1);
+	}
 	fclose(fp1);
 }
 	
-void SortAVL(char *pArg, char *pArg2){
+void SortAVLt1(char *pArg, char *pArg2, char *pArg3){
 	TreeNode* pRoot=NULL;
 	int eq=0, i=0, ID=0;
 	float x=0;
@@ -257,7 +312,37 @@ void SortAVL(char *pArg, char *pArg2){
 	}
 	fclose(fp);
 	puts("fin");
-	createFileOut(pRoot, pArg2);
+	createFileOut(pRoot, pArg2, pArg3);
+}
+
+void SortAVL_h(char *pArg, char *pArg2, char *pArg3){
+	TreeNode* pRoot=NULL;
+	int eq=0, i=0, ID=0;
+	float x=0;
+	int* p1=&eq;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%f", &ID, &x);
+		pRoot=insertionAVL_h(pRoot, ID, x, p1);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin");
+	createFileOut(pRoot, pArg2, pArg3);
 }
 
 void checkFileIn(char* pArg){
@@ -371,10 +456,10 @@ int main(int argc, char **argv){
 	puts("");
 	printf("%s", argv[3]);
 	printf("\n%d", argc);
-	checkFileIn(*(argv+1));
-	checkFileOut(*(argv+2));
+	checkFileIn(argv[1]);
+	checkFileOut(argv[2]);
 	puts("hey");
-	checkMode(*(argv+3));
+	checkMode(argv[3]);
 	puts("cool");
 	if(argc==4){
 		puts("mode avl par défaut");
@@ -389,6 +474,11 @@ int main(int argc, char **argv){
 	printf("%s", argv[1]);
 	puts("");
 	printf("%s", argv[2]);
-	SortAVL(argv[1], argv[2]);
+	if(strcmp(argv[3], "-t1")==0 || strcmp(argv[3], "-p1")==0 || strcmp(argv[3], "-m")==0){
+		SortAVLt1(argv[1], argv[2], argv[3]);
+	}
+	else if(strcmp(argv[3], "-h")==0){
+		SortAVL_h(argv[1], argv[2], argv[3]);
+	}
 	return 0 ;
 }
