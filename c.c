@@ -198,13 +198,11 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, int* h){
 	else{ //si l'élément est déjà dans l'arbre
 		*h=0;
 		pTree->value++;
-		pTree->moy=(pTree->moy+val)/pTree->value;
+		pTree->moy=pTree->moy+val;
 		pTree->min=minf(pTree->min, val);
 		pTree->max=maxf(pTree->max, val);
 		return pTree;
 	}
-	pTree->min=min(pTree->min,val);
-	pTree->max=max(pTree->max, val);
 	if(*h!=0){ //si le facteur d'équilibre est différent de 0
 		pTree->equilibre=pTree->equilibre+*h; //mise à jour du facteur d'équilibre
 		pTree=equilibrerAVL(pTree);
@@ -246,8 +244,6 @@ void SortAVL(char *pArg, char *pArg2){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%d;%f", &ID, &x); 
 		pRoot=insertionAVL(pRoot, ID, x, p1);
-		printf("%f | %d", x, ID);
-		puts("");
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
@@ -260,7 +256,6 @@ void SortAVL(char *pArg, char *pArg2){
 	}
 	fclose(fp);
 	puts("fin");
-	walkthrough_inf1(pRoot);
 	createFileOut(pRoot, pArg2);
 }
 
