@@ -112,10 +112,6 @@ var=$(($tab+$abr+$avl))
 echo $var
 echo $nbExecC
 echo $t1
-if [ "$var" -ge 2 ]; then
-	echo "vous ne pouvez pas demander plus d'une restriction géographique"
-	exit 1
-fi
 if [ "$var" -eq 0 ]; then
 	echo "il n'y a pas de manière de trier demandé, le choix par défaut est donc l'avl"
 	avl=1
