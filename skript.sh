@@ -140,35 +140,35 @@ for var in nbExecC ; do
 	fi
 	if [ "$t2" -eq 1 ]; then
 		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -t2 --$mode
+		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$t3" -eq 1 ]; then
 		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -t3 --$mode
+		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$p1" -eq 1 ]; then
 		cut -d ';' -f 1,7 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -p1 --$mode
+		./c -f$nameOutpout -odata.txt -t1 --$mode
 		gnuplot -persist gunupulotu.plt
 	fi
 	if [ "$p2" -eq 1 ]; then
 		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -p2 --$mode
+		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$t3" -eq 1 ]; then
 		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -p3 --$mode
+		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$w" -eq 1 ]; then
 		cut -d ';' -f 1,4,5 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -w --$mode
+		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$m" -eq 1 ]; then
 		cut -d ';' -f 1,6 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -m --$mode
+		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$h" -eq 1 ]; then
 		cut -d ';' -f 1,14 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -h --$mode
+		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 done
