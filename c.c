@@ -27,7 +27,7 @@ TreeNode* createTree(int n, float val){
 		exit(1);
 	}
 	pTree->IDstat=n;
-	pTree->value=val;
+	pTree->value=1;
 	pTree->min=val;
 	pTree->max=val;
 	pTree->moy=val;
@@ -197,7 +197,8 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, int* h){
 	}
 	else{ //si l'élément est déjà dans l'arbre
 		*h=0;
-
+		pTree->value++;
+		pTree->moy=(pTree->moy+val)/pTree->value;
 		pTree->min=minf(pTree->min, val);
 		pTree->max=maxf(pTree->max, val);
 		return pTree;
