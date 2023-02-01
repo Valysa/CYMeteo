@@ -30,6 +30,7 @@ TreeNode* createTree(int n, float val){
 	pTree->value=val;
 	pTree->min=val;
 	pTree->max=val;
+	pTree->moy=val;
 	pTree->pLeft=NULL;
 	pTree->pRight=NULL;
 	pTree->equilibre=0;	
@@ -59,6 +60,24 @@ void walkthrough_inf1(TreeNode* pTree){ //parcours infixe
 		walkthrough_inf1(pTree->pLeft);
 		process(pTree);
 		walkthrough_inf1(pTree->pRight);
+	}
+}
+
+float maxf(float a, float b){
+	if(a>=b){
+		return a;
+	}
+	else{
+		return b;
+	}
+}
+
+float minf(float a, float b){
+	if(a<=b){
+		return a;
+	}
+	else{
+		return b;
 	}
 }
 
@@ -178,6 +197,9 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, int* h){
 	}
 	else{ //si l'élément est déjà dans l'arbre
 		*h=0;
+
+		pTree->min=minf(pTree->min, val);
+		pTree->max=maxf(pTree->max, val);
 		return pTree;
 	}
 	pTree->min=min(pTree->min,val);
@@ -222,7 +244,7 @@ void SortAVL(char *pArg, char *pArg2){
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%d;%f", &ID, &x); 
-		pRoot=insertionAVL(pRoot, x, ID, p1);
+		pRoot=insertionAVL(pRoot, ID, x, p1);
 		printf("%f | %d", x, ID);
 		puts("");
 		while(c!='\n') {
