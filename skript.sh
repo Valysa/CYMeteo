@@ -141,8 +141,8 @@ dateTest (){ #year month day
 	fi
 return 1
 }
-if dateTest $syear $smonth $sday && dateTest $eyear $emonth $eday ; then
-	if [ "$d" -eq 1 ] ; then
+if [ "$d" -eq 1 ] ; then
+	if dateTest $syear $smonth $sday && dateTest $eyear $emonth $eday ; then
 		if [ $(date -d "$sdate" +%s) -lt $(date -d "$edate" +%s) ]; then
 			awk -F ";" -v start="$sdate" -v end="$edate" '$2 >= start && $2 <= end {print $0}' area.csv > area_time.csv
 		fi
@@ -150,11 +150,18 @@ if dateTest $syear $smonth $sday && dateTest $eyear $emonth $eday ; then
 			echo date one is greater than date two
 			exit 1
 	fi
+else
+	cat area.csv > area_time.csv
 fi
+rm area.csv
 var=$(($tab+$abr+$avl))
 echo $var
 echo $nbExecC
 echo $t1
+if [ "$var" -ge 2 ]; then
+	echo "vous ne pouvez pas demander plus d'une restriction géographique"
+	exit 1
+fi
 if [ "$var" -eq 0 ]; then
 	echo "il n'y a pas de manière de trier demandé, le choix par défaut est donc l'avl"
 	avl=1
@@ -175,7 +182,8 @@ for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
 		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
-		gnuplot -persist gunupulotu.plt
+		gnuplot -persist t1.plt
+		rm $nameOutpout 
 	fi
 	if [ "$t2" -eq 1 ]; then
 		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
@@ -188,7 +196,8 @@ for var in nbExecC ; do
 	if [ "$p1" -eq 1 ]; then
 		cut -d ';' -f 1,7 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
-		gnuplot -persist gunupulotu.plt
+		gnuplot -persist t1.plt
+		rm $nameOutpout 
 	fi
 	if [ "$p2" -eq 1 ]; then
 		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
@@ -211,3 +220,5 @@ for var in nbExecC ; do
 		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 done
+rm  data.txt
+rm  area_time.csv
