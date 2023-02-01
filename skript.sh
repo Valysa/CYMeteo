@@ -134,7 +134,7 @@ echo $mode
 # echo $nameOutpout
 for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
-		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv > $nameOutpout ;
+		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv | grep -E ';$' -v > $nameOutpout ;
 		echo "test"
 		./c.o -f$nameOutpout -odata.txt -t1 --$mode
 	fi
