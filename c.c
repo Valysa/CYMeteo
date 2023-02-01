@@ -4,8 +4,8 @@
 
 typedef struct tree{
 	float value;
-	/*int IDstat;
-	int year;
+	int IDstat;
+	/*int year;
 	int month:
 	int day;
 	int hour;
@@ -13,17 +13,24 @@ typedef struct tree{
 	float wind;
 	float height;
 	float temperature;*/
+	float min;
+	float max;
+	float moy;
 	struct tree* pLeft;
 	struct tree* pRight;
 	int equilibre;
 }TreeNode;
 
-TreeNode* createTree(float val){
+TreeNode* createTree(int n, float val){
 	TreeNode* pTree=malloc(sizeof(TreeNode));
 	if(pTree==NULL){
 		exit(1);
 	}
-	pTree->value=val;
+	pTree->IDstat=n;
+	pTree->value=1;
+	pTree->min=val;
+	pTree->max=val;
+	pTree->moy=val;
 	pTree->pLeft=NULL;
 	pTree->pRight=NULL;
 	pTree->equilibre=0;	
@@ -36,15 +43,42 @@ int isEmpty(TreeNode* pTree){ //estVide
 
 void process(TreeNode* pTree){
 	if(!isEmpty(pTree)){
-		printf("|%f", pTree->value);
+		printf("\n|%f | %d", pTree->value, pTree->IDstat);
 	}
 }
 
 void walkthrough_inf(TreeNode* pTree, FILE *fp1){ //parcours infixe
 	if(!isEmpty(pTree)){
 		walkthrough_inf(pTree->pLeft, fp1);
-		fprintf(fp1, "%f\n", pTree->value);
+		fprintf(fp1, "%05d;%f;%f;%f\n", pTree->IDstat, pTree->moy/pTree->value, pTree->min, pTree->max);
+		printf("%f\n", pTree->value);
 		walkthrough_inf(pTree->pRight, fp1);
+	}
+}
+
+void walkthrough_inf1(TreeNode* pTree){ //parcours infixe
+	if(!isEmpty(pTree)){
+		walkthrough_inf1(pTree->pLeft);
+		process(pTree);
+		walkthrough_inf1(pTree->pRight);
+	}
+}
+
+float maxf(float a, float b){
+	if(a>=b){
+		return a;
+	}
+	else{
+		return b;
+	}
+}
+
+float minf(float a, float b){
+	if(a<=b){
+		return a;
+	}
+	else{
+		return b;
 	}
 }
 
@@ -150,20 +184,24 @@ TreeNode* equilibrerAVL(TreeNode* pTree){
 	return pTree;
 }		
 
-TreeNode* insertionAVL(TreeNode* pTree, float val, int* h){
+TreeNode* insertionAVL(TreeNode* pTree, int n, float val, int* h){
 	if(pTree==NULL){
 		*h=1;
-		return createTree(val);
+		return createTree(n, val);
 	}
-	else if(pTree->value>val){
-		pTree->pLeft=insertionAVL(pTree->pLeft, val, h);
+	else if(pTree->IDstat>n){
+		pTree->pLeft=insertionAVL(pTree->pLeft, n, val, h);
 		*h=-*h;
 	}
-	else if(pTree->value<val){
-		pTree->pRight=insertionAVL(pTree->pRight, val, h);
+	else if(pTree->IDstat<n){
+		pTree->pRight=insertionAVL(pTree->pRight, n, val, h);
 	}
 	else{ //si l'élément est déjà dans l'arbre
 		*h=0;
+		pTree->value++;
+		pTree->moy=(pTree->moy+val);
+		pTree->min=minf(pTree->min, val);
+		pTree->max=maxf(pTree->max, val);
 		return pTree;
 	}
 	if(*h!=0){ //si le facteur d'équilibre est différent de 0
@@ -179,12 +217,12 @@ TreeNode* insertionAVL(TreeNode* pTree, float val, int* h){
 	return pTree;
 }
 
-void createFileOut(TreeNode* pTree){
+void createFileOut(TreeNode* pTree, char *pArg){
 	if(pTree==NULL){
 		exit(1);
 	}
 	FILE *fp1=NULL;
-	fp1 = fopen("tutedebrouille.txt", "w+");
+	fp1 = fopen(pArg, "w+");
 	if(fp1==NULL){
 		exit(3);
 	}
@@ -192,42 +230,34 @@ void createFileOut(TreeNode* pTree){
 	fclose(fp1);
 }
 	
-void SortAVL(){
-	puts("\nok");
+void SortAVL(char *pArg, char *pArg2){
 	TreeNode* pRoot=NULL;
-	int eq=0, i=0;
+	int eq=0, i=0, ID=0;
 	float x=0;
 	int* p1=&eq;
 	int c='a';
 	FILE *fp=NULL;
-	fp = fopen("data.txt", "r");
+	fp = fopen(pArg, "r");
 	if(fp==NULL){
 		exit(3);
 	}
 	while(c!=EOF){
-		puts("stop");
-		while(c!=';'){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%f", &ID, &x); 
+		pRoot=insertionAVL(pRoot, ID, x, p1);
+		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
 			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
 		}
-		fseek(fp, i, SEEK_SET);
-		fscanf(fp, "%f", &x); 
-		pRoot=insertionAVL(pRoot, x, p1);
-		printf("%f", x);
-		puts("");
-		while(c!='\n' || c!=EOF) {
-			fseek(fp, i, SEEK_SET);
-			i++;
-			c=fgetc(fp);
-			printf("\n%d", c);
-			exit(1);
-			//printf("(%d)\n", c);
-		}
+		c=fgetc(fp);
 	}
 	fclose(fp);
 	puts("fin");
-	createFileOut(pRoot);
+	createFileOut(pRoot, pArg2);
 }
 
 void checkFileIn(char* pArg){
@@ -359,6 +389,6 @@ int main(int argc, char **argv){
 	printf("%s", argv[1]);
 	puts("");
 	printf("%s", argv[2]);
-	SortAVL();
+	SortAVL(argv[1], argv[2]);
 	return 0 ;
 }
