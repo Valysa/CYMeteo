@@ -37,7 +37,6 @@ for var in $(seq 1 "$#") ; do
 		'-f') if [ "$f" -eq "0" ] ; then 
 				nbarg=$((nbarg+1)) ; f=1 ;
 				if [ -e ${!nbarg} ] ; then
-					echo ton pere le $nbarg
 					file=${!nbarg}
 				else
 					echo "the file you put in entry does not exist or isnt valid"
@@ -253,7 +252,7 @@ for var in nbExecC ; do
 		gnuplot -persist t1.plt
 	fi
 	if [ "$t2" -eq 1 ]; then
-		cut -d ';' -f 1,11,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr '-' '' > $nameOutpout ;
+		cut -d ';' -f 11,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr '-' '' > $nameOutpout ;
 		./c.o -f$nameOutpout -odata.txt -t2 --$mode
 	fi
 	if [ "$t3" -eq 1 ]; then
@@ -266,7 +265,7 @@ for var in nbExecC ; do
 		gnuplot -persist t1.plt
 	fi
 	if [ "$p2" -eq 1 ]; then
-		cut -d ';' -f 1,7,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr '-' '' > $nameOutpout ;
+		cut -d ';' -f 7,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr '-' '' > $nameOutpout ;
 		./c.o -f$nameOutpout -odata.txt -p2 --$mode
 	fi
 	if [ "$p3" -eq 1 ]; then
