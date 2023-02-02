@@ -71,7 +71,7 @@ void walkthrough_inf_h(TreeNode* pTree, FILE *fp1){ //mode h
 void walkthrough_inf_m(TreeNode* pTree, FILE *fp1){ //mode m
 	if(!isEmpty(pTree)){
 		walkthrough_inf_m(pTree->pRight, fp1);
-		fprintf(fp1, "%f;%d\n", pTree->max, pTree->IDstat);
+		fprintf(fp1, "%f;%d;%f;%f\n", pTree->max, pTree->IDstat, pTree->longitude, pTree->latitude);
 		walkthrough_inf_m(pTree->pLeft, fp1);
 	}
 }
@@ -204,17 +204,17 @@ TreeNode* equilibrerAVL(TreeNode* pTree){
 	return pTree;
 }		
 
-TreeNode* insertionAVL(TreeNode* pTree, int n, float val, int* h){
+TreeNode* insertionAVL(TreeNode* pTree, int n, float val, float x, float y, int* h){
 	if(pTree==NULL){
 		*h=1;
-		return createTree(n, val, 0, 0);
+		return createTree(n, val, x, y);
 	}
 	else if(pTree->IDstat>n){
-		pTree->pLeft=insertionAVL(pTree->pLeft, n, val, h);
+		pTree->pLeft=insertionAVL(pTree->pLeft, n, val, x, y, h);
 		*h=-*h;
 	}
 	else if(pTree->IDstat<n){
-		pTree->pRight=insertionAVL(pTree->pRight, n, val, h);
+		pTree->pRight=insertionAVL(pTree->pRight, n, val, x, y, h);
 	}
 	else{ //si l'élément est déjà dans l'arbre
 		*h=0;
@@ -303,7 +303,37 @@ void SortAVLt1(char *pArg, char *pArg2, char *pArg3){
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%d;%f", &ID, &x); 
-		pRoot=insertionAVL(pRoot, ID, x, p1);
+		pRoot=insertionAVL(pRoot, ID, x, 0, 0, p1);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin1");
+	createFileOut(pRoot, pArg2, pArg3);
+}
+
+void SortAVL_m(char *pArg, char *pArg2, char *pArg3){
+	TreeNode* pRoot=NULL;
+	int eq=0, i=0, ID=0;
+	float x=0, y=0, z=0;
+	int* p1=&eq;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%f;%f;%f", &ID, &x, &y, &z);
+		pRoot=insertionAVL(pRoot, ID, x, y, z, p1);
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
@@ -478,8 +508,11 @@ int main(int argc, char **argv){
 	printf("%s", argv[1]);
 	puts("");
 	printf("%s", argv[2]);
-	if(strcmp(argv[3], "-t1")==0 || strcmp(argv[3], "-p1")==0 || strcmp(argv[3], "-m")==0){
+	if(strcmp(argv[3], "-t1")==0 || strcmp(argv[3], "-p1")==0){
 		SortAVLt1(argv[1], argv[2], argv[3]);
+	}
+	else if(strcmp(argv[3], "-m")==0){
+		SortAVL_m(argv[1], argv[2], argv[3]);
 	}
 	else if(strcmp(argv[3], "-h")==0){
 		SortAVL_h(argv[1], argv[2], argv[3]);
