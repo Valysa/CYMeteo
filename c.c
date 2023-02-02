@@ -75,7 +75,7 @@ void walkthrough_inf_t1(TreeNode* pTree, FILE *fp1){ //mode t1
 void walkthrough_inf_w(TreeNode* pTree, FILE *fp1){ //mode w
 	if(!isEmpty(pTree)){
 		walkthrough_inf_w(pTree->pLeft, fp1);
-		fprintf(fp1, "%05d;%f;%f\n", pTree->IDstat, pTree->wind_o/pTree->value, pTree->wind_moy/pTree->value);
+		fprintf(fp1, "%05d;%f;%f;%f;%f\n", pTree->IDstat, pTree->wind_o/pTree->value, pTree->wind_moy/pTree->value, pTree->longitude, pTree->latitude);
 		walkthrough_inf_w(pTree->pRight, fp1);
 	}
 }
@@ -102,6 +102,19 @@ void walkthrough_inf1(TreeNode* pTree){ //parcours infixe
 		process(pTree);
 		walkthrough_inf1(pTree->pRight);
 	}
+}
+
+TreeNode* ajoutABR(TreeNode* pTree, int val){
+	if(pTree==NULL){
+		return createTree(0, val, 0, 0, 0, 0, 0, 0, 0, 0);
+	}
+	else if(pTree->value>val){
+		pTree->pLeft=ajoutABR(pTree->pLeft, val);
+	}
+	else if(pTree->value<val){
+		pTree->pRight=ajoutABR(pTree->pRight, val);
+	}
+	return pTree;
 }
 
 float maxf(float a, float b){
@@ -343,6 +356,7 @@ void createFileOut(TreeNode* pTree, char *pArg, char *pArg2){
 	else if(strcmp(pArg2, "-m")==0){
 		walkthrough_inf_m(pTree, fp1);
 	}
+	free(pTree);
 	fclose(fp1);
 }
 	
@@ -410,7 +424,7 @@ void SortAVL_t2(char *pArg, char *pArg2, char *pArg3){
 void SortAVL_w(char *pArg, char *pArg2, char *pArg3){
 	TreeNode* pRoot=NULL;
 	int eq=0, i=0, ID=0;
-	float o=0, w=0;
+	float o=0, w=0, x=0, y=0;
 	int* p1=&eq;
 	int c='a';
 	FILE *fp=NULL;
@@ -420,8 +434,8 @@ void SortAVL_w(char *pArg, char *pArg2, char *pArg3){
 	}
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
-		fscanf(fp, "%d;%f;%f", &ID, &o, &w); 
-		pRoot=insertionAVL(pRoot, ID, 0, 0, 0, o, w, p1);
+		fscanf(fp, "%d;%f;%f;%f;%f", &ID, &o, &w, &x, &y); 
+		pRoot=insertionAVL(pRoot, ID, 0, x, y, o, w, p1);
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
