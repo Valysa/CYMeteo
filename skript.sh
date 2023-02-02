@@ -1,10 +1,10 @@
 #!/bin/bash
-if [ -e o ] ; then
+if [ -e c ] ; then
     echo "le fichier c compilé existe"
 else
     echo "le fichier c compilé n'existe pas"
-    gcc -o o c.c
-    if [ -e o ] ; then
+    gcc -o c c.c
+    if [ -e c ] ; then
 		echo "l'élément a bien été compiled"
 	else
 		echo "ba carrément la compilation elle marche pas il se passe des bails sombres avec le gcc"
@@ -28,10 +28,10 @@ testArea (){
 }
 
 t1=0 ; t2=0 ; t3=0 ; p1=0 ; p2=0 ; p3=0 ; w=0 ; m=0 ; h=0 ; F=0 ; G=0 ; S=0 ; A=0 ; O=0 ; Q=0 ; tab=0 ; abr=0 ; avl=0 ; d=0;
-var=0 ; nbExecC=0 ; nbLoca=0; nbarg=0; sday=0 ; smonth=0 ; syear=0 ; eday=0; emonth=0; eyear=0; sdate=0; edate=0;
+var=0 ; nbExecC=0 ; nbLoca=0; nbarg=0; sday=0 ; smonth=0 ; syear=0 ; eday=0; emonth=0; eyear=0; sdate=0; edate=0; a=0; g=0; slong=0 ; slat=0; elong=0 ; elat=0 ;
 nameOutpout=data.txt
 for var in $(seq 1 "$#") ; do
-	nbarg=$((nbarg+1))
+	nbarg=$var
 	case "${!var}" in
 		# TYPE DE DONNE A ENVOYER AU C
 		'-t1') if test $t1 ; then 
@@ -80,6 +80,20 @@ for var in $(seq 1 "$#") ; do
 		'-Q') if testArea $nbLoca ; then 
 				echo "Antarctique" ; Q=1 ; grep -E "89642" meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antarctique.txt
 			  fi ;;
+		'-g') if [ "$g" -eq "0" ] ; then 
+				nbarg=$((nbarg+1)) ; g=1 ;
+				slong=${!nbarg} ; nbarg=$((nbarg+1)) ; elong=${!nbarg} ;
+			  else
+			  	echo can t put that many restriction for more info type --help
+				exit 1
+			  fi ;;
+		'-a') if [ "$a" -eq "0" ] ; then 
+				nbarg=$((nbarg+1)) ; a=1 ;
+				slat=${!nbarg} ; nbarg=$((nbarg+1)) ; elat=${!nbarg} ;
+			  else
+			  	echo can t put that many restriction for more info type --help
+				exit 1
+			  fi ;;
 		# RECUPERATION DE LA RESTRICTION TEMPORELLE
 		'-d') nbarg=$((nbarg+1)) ; d=1;
 			syear=${!nbarg::4} ; smonth=${!nbarg:5:2} ; sday=${!nbarg:8:2} ; sdate=${!nbarg}T00:00:00+01:00 ;
@@ -93,7 +107,7 @@ for var in $(seq 1 "$#") ; do
 		# HELP
 		'-help') echo "help à écrire ptdr" ; exit 1 ;;
 		# CAS GENERAL
-		*  ) echo "l'argument ${!var} n'est pas réferencé" ; exit 0 ;;
+	#	*  ) echo "l'argument ${!var} n'est pas réferencé" ; exit 0 ;;
 	esac
 done
 if [ "$nbExecC" -eq 0 ] ; then
@@ -141,7 +155,7 @@ dateTest (){ #year month day
 	fi
 return 1
 }
-if [ "$d" -eq 1 ] ; then
+if [ "$d" -eq "1" ] ; then
 	if dateTest $syear $smonth $sday && dateTest $eyear $emonth $eday ; then
 		if [ $(date -d "$sdate" +%s) -lt $(date -d "$edate" +%s) ]; then
 			awk -F ";" -v start="$sdate" -v end="$edate" '$2 >= start && $2 <= end {print $0}' area.csv > area_time.csv
@@ -152,6 +166,16 @@ if [ "$d" -eq 1 ] ; then
 	fi
 else
 	cat area.csv > area_time.csv
+fi
+if [ "$a" -eq "1" ] && [ "$g" -eq "1" ] ; then
+awk -F ';' '$14 ~ /^[0-9.-]+,[0-9.-]+$/ { 
+  split($14,longlat,",") 
+  if (longlat[1] > slong && longlat[1] < elong && longlat[2] > slat && longlat[2] < elat) {
+    print $0 
+  } 
+}' < area_time.csv > finale.txt
+else
+	cat area_time.csv > finale.txt
 fi
 rm area.csv
 var=$(($tab+$abr+$avl))
@@ -180,45 +204,45 @@ echo $mode
 # echo $nameOutpout
 for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
-		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
+		cut -d ';' -f 1,11,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
 		gnuplot -persist t1.plt
-		rm $nameOutpout 
 	fi
 	if [ "$t2" -eq 1 ]; then
-		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
+		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$t3" -eq 1 ]; then
-		cut -d ';' -f 1,11 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
+		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$p1" -eq 1 ]; then
-		cut -d ';' -f 1,7 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
+		cut -d ';' -f 1,7 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
 		gnuplot -persist t1.plt
-		rm $nameOutpout 
 	fi
 	if [ "$p2" -eq 1 ]; then
-		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
+		cut -d ';' -f 1,3,7,8 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
-	if [ "$t3" -eq 1 ]; then
-		cut -d ';' -f 1,3,7,8 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
+	if [ "$p3" -eq 1 ]; then
+		cut -d ';' -f 1,3,7,8 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$w" -eq 1 ]; then
-		cut -d ';' -f 1,4,5 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
+		cut -d ';' -f 1,4,5 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
 	fi
 	if [ "$m" -eq 1 ]; then
-		cut -d ';' -f 1,6 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode
+		cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
+		./c -f$nameOutpout -odata.txt -m --$mode
+		#gnuplot -persist m.plt
 	fi
 	if [ "$h" -eq 1 ]; then
-		cut -d ';' -f 1,14 --output-delimiter=';' area_time.csv | grep -E ';$|;;' -v > $nameOutpout ;
+		cut -d ';' -f 1,14 --output-delimiter=';' finale.txt| grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
+		gnuplot -persist h.plt
 	fi
 done
-rm  data.txt
+#rm  data.txt
 rm  area_time.csv
