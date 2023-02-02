@@ -5,13 +5,6 @@
 typedef struct tree{
 	float value;
 	int IDstat;
-	/*int year;
-	int month:
-	int day;
-	int hour;
-	float moisture;
-	float wind;
-	float temperature;*/
 	float min;
 	float max;
 	float moy;
@@ -102,19 +95,6 @@ void walkthrough_inf1(TreeNode* pTree){ //parcours infixe
 		process(pTree);
 		walkthrough_inf1(pTree->pRight);
 	}
-}
-
-TreeNode* ajoutABR(TreeNode* pTree, int val){
-	if(pTree==NULL){
-		return createTree(0, val, 0, 0, 0, 0, 0, 0, 0, 0);
-	}
-	else if(pTree->value>val){
-		pTree->pLeft=ajoutABR(pTree->pLeft, val);
-	}
-	else if(pTree->value<val){
-		pTree->pRight=ajoutABR(pTree->pRight, val);
-	}
-	return pTree;
 }
 
 float maxf(float a, float b){
@@ -511,6 +491,156 @@ void SortAVL_h(char *pArg, char *pArg2, char *pArg3){
 	createFileOut(pRoot, pArg2, pArg3);
 }
 
+TreeNode* ajoutABR_t1(TreeNode* pTree, int n, float val, float x, float y, float o, float w){
+	if(pTree==NULL){
+		return createTree(n, val, x, y, o, w, 0, 0, 0, 0);
+	}
+	else if(pTree->IDstat>val){
+		pTree->pLeft=ajoutABR_t1(pTree->pLeft, n, val, x, y, o, w);
+	}
+	else if(pTree->IDstat<val){
+		pTree->pRight=ajoutABR_t1(pTree->pRight, n, val, x, y, o, w);
+	}
+	else{
+		pTree->value++;
+		pTree->moy=pTree->moy+val;
+		pTree->min=minf(pTree->min, val);
+		pTree->max=maxf(pTree->max, val);
+		pTree->wind_o=pTree->wind_o+o;
+		pTree->wind_moy=pTree->wind_moy+w;
+	}
+	return pTree;
+}
+
+TreeNode* ajoutABR_h(TreeNode* pTree, int n, float val, float x, float y){
+	if(pTree==NULL){
+		return createTree(n, val, x, y, 0, 0, 0, 0, 0, 0);
+	}
+	else if(pTree->height>val){
+		pTree->pLeft=ajoutABR_h(pTree->pLeft, n, val, x, y);
+	}
+	else if(pTree->height<val){
+		pTree->pRight=ajoutABR_h(pTree->pRight, n, val, x, y);
+	}
+	return pTree;
+}
+
+void SortABR_t1(char *pArg, char *pArg2, char *pArg3){
+	TreeNode* pRoot=NULL;
+	int i=0, ID=0;
+	float x=0;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%f", &ID, &x); 
+		pRoot=ajoutABR_t1(pRoot, ID, x, 0, 0, 0, 0);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin1");
+	createFileOut(pRoot, pArg2, pArg3);
+}
+
+void SortABR_w(char *pArg, char *pArg2, char *pArg3){
+	TreeNode* pRoot=NULL;
+	int i=0, ID=0;
+	float o=0, w=0, x=0, y=0;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%f;%f;%f;%f", &ID, &o, &w, &x, &y); 
+		pRoot=ajoutABR_t1(pRoot, ID, 0, x, y, o, w);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin w");
+	createFileOut(pRoot, pArg2, pArg3);
+}
+
+void SortABR_m(char *pArg, char *pArg2, char *pArg3){
+	TreeNode* pRoot=NULL;
+	int i=0, ID=0;
+	float x=0, y=0, z=0;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%f;%f;%f", &ID, &x, &y, &z);
+		pRoot=ajoutABR_t1(pRoot, ID, x, y, z, 0, 0);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin m");
+	createFileOut(pRoot, pArg2, pArg3);
+}
+
+void SortABR_h(char *pArg, char *pArg2, char *pArg3){
+	TreeNode* pRoot=NULL;
+	int i=0, ID=0;
+	float x=0, y=0, z=0;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%f;%f;%f", &ID, &x, &y, &z);
+		pRoot=ajoutABR_h(pRoot, ID, z, x, y);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin");
+	createFileOut(pRoot, pArg2, pArg3);
+}
+
 void checkFileIn(char* pArg){
 	if(pArg==NULL){
 		exit(4);
@@ -640,17 +770,33 @@ int main(int argc, char **argv){
 	printf("%s", argv[1]);
 	puts("");
 	printf("%s", argv[2]);
-	if(strcmp(argv[3], "-t1")==0 || strcmp(argv[3], "-p1")==0){
-		SortAVLt1(argv[1], argv[2], argv[3]);
+	if(strcmp(argv[4], "--avl")==0){
+		if(strcmp(argv[3], "-t1")==0 || strcmp(argv[3], "-p1")==0){
+			SortAVLt1(argv[1], argv[2], argv[3]);
+		}
+		else if(strcmp(argv[3], "-m")==0){
+			SortAVL_m(argv[1], argv[2], argv[3]);
+		}
+		else if(strcmp(argv[3], "-h")==0){
+			SortAVL_h(argv[1], argv[2], argv[3]);
+		}
+		else if(strcmp(argv[3], "-w")==0){
+			SortAVL_w(argv[1], argv[2], argv[3]);
+		}
 	}
-	else if(strcmp(argv[3], "-m")==0){
-		SortAVL_m(argv[1], argv[2], argv[3]);
-	}
-	else if(strcmp(argv[3], "-h")==0){
-		SortAVL_h(argv[1], argv[2], argv[3]);
-	}
-	else if(strcmp(argv[3], "-w")==0){
-		SortAVL_w(argv[1], argv[2], argv[3]);
+	else if(strcmp(argv[4], "--abr")==0){
+		if(strcmp(argv[3], "-t1")==0 || strcmp(argv[3], "-p1")==0){
+			SortABR_t1(argv[1], argv[2], argv[3]);
+		}
+		else if(strcmp(argv[3], "-m")==0){
+			SortABR_m(argv[1], argv[2], argv[3]);
+		}
+		else if(strcmp(argv[3], "-h")==0){
+			SortABR_h(argv[1], argv[2], argv[3]);
+		}
+		else if(strcmp(argv[3], "-w")==0){
+			SortABR_w(argv[1], argv[2], argv[3]);
+		}
 	}
 	//SortAVL_t2(argv[1], argv[2], argv[3]);
 	return 0 ;
