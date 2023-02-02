@@ -40,7 +40,7 @@ for var in $(seq 1 "$#") ; do
 					echo ton pere le $nbarg
 					file=${!nbarg}
 				else
-					echo "the file you put in entry does not exist"
+					echo "the file you put in entry does not exist or isnt valid"
 					exit;
 				fi
 			else
@@ -254,11 +254,11 @@ for var in nbExecC ; do
 	fi
 	if [ "$t2" -eq 1 ]; then
 		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode
+		./c.o -f$nameOutpout -odata.txt -t2 --$mode
 	fi
 	if [ "$t3" -eq 1 ]; then
 		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode
+		./c.o -f$nameOutpout -odata.txt -t3 --$mode
 	fi
 	if [ "$p1" -eq 1 ]; then
 		cut -d ';' -f 1,7 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
@@ -267,15 +267,15 @@ for var in nbExecC ; do
 	fi
 	if [ "$p2" -eq 1 ]; then
 		cut -d ';' -f 1,3,7,8 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode
+		./c.o -f$nameOutpout -odata.txt -p2 --$mode
 	fi
 	if [ "$p3" -eq 1 ]; then
 		cut -d ';' -f 1,3,7,8 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode
+		./c.o -f$nameOutpout -odata.txt -p3 --$mode
 	fi
 	if [ "$w" -eq 1 ]; then
 		cut -d ';' -f 1,4,5 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode
+		./c.o -f$nameOutpout -odata.txt -w --$mode
 		gnuplot -persist w.plt
 	fi
 	if [ "$m" -eq 1 ]; then
