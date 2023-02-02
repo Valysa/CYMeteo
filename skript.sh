@@ -38,7 +38,7 @@ for var in $(seq 1 "$#") ; do
 				nbarg=$((nbarg+1)) ; f=1 ;
 				if [ -e ${!nbarg} ] ; then
 					echo ton pere le $nbarg
-					file=$nbarg
+					file=${!nbarg}
 				else
 					echo "the file you put in entry does not exist"
 					exit;
@@ -82,22 +82,22 @@ for var in $(seq 1 "$#") ; do
 				fi ;;
 		# RECUPERATION DES DONNEES GEOGRAPHIQUES
 		'-F') if testArea $nbLoca ; then 
-				echo "France métropolitaine" ; F=1 ; grep -E '81408|81401|81405|81415|71805|78894|78890|78897|78925|78922|61997|61996|61972|61980|61976|67005|61968|89642|61998' -v  $file > area.csv ; nbLoa=$((nbLoca+1)) ; nameOutpout=France.txt 
+				echo "France métropolitaine" ; F=1 ;  nameOutpout=France.txt 
 			  fi ;;
 		'-G') if testArea $nbLoca ; then 
-				echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415' $file > area.csv ; nbLoca=$((nbLoca+1)) ;   nameOutpout=Guyane.txt
+				echo "Guyane" ; G=1 ;  nameOutpout=Guyane.txt
 			  fi ;;
 		'-S') if testArea $nbLoca ; then 
-				echo "Saint-Pierre et Michelin" ; S=1 ; grep "71805" $file > area.csv ; nbLoca=$((nbLoca+1))  ;   nameOutpout=Saint_Pierre_Et_Miquelon.txt
+				echo "Saint-Pierre et Michelin" ; S=1 ;  nbLoca=$((nbLoca+1))  ;   nameOutpout=Saint_Pierre_Et_Miquelon.txt
 			  fi ;;
 		'-A') if testArea $nbLoca ; then 
-				echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' $file > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antilles.txt
+				echo "Antilles" ; A=1 ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antilles.txt
 			  fi ;;
 		'-O') if testArea $nbLoca ; then 
-				echo "Ocean indien" ; O=1 ; grep -E '61998|61997|61996|61972|61980|61976|67005|61968' $file > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Ocean_Indien.txt
+				echo "Ocean indien" ; O=1 ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Ocean_Indien.txt
 			  fi ;;
 		'-Q') if testArea $nbLoca ; then 
-				echo "Antarctique" ; Q=1 ; grep -E "89642" $file > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antarctique.txt
+				echo "Antarctique" ; Q=1 ;  nameOutpout=Antarctique.txt
 			  fi ;;
 		'-g') if [ "$g" -eq "0" ] ; then 
 				nbarg=$((nbarg+1)) ; g=1 ;
@@ -131,10 +131,6 @@ for var in $(seq 1 "$#") ; do
 done
 if [ "$f" -eq 0 ] ; then
 	echo " -f must be specified --help for more info"
-	exit 1
-fi
-if [ "$nbExecC" -eq 0 ] ; then
-	echo "vous devez spécifier au moins un type de donnée a traiter, si vous ne savez pas de quoi il s'agit, tapez l'argument -help"
 	exit 1
 fi
 dayTest (){ # month day year
@@ -181,7 +177,7 @@ return 1
 if [ "$d" -eq "1" ] ; then
 	if dateTest $syear $smonth $sday && dateTest $eyear $emonth $eday ; then
 		if [ $(date -d "$sdate" +%s) -lt $(date -d "$edate" +%s) ]; then
-			awk -F ";" -v start="$sdate" -v end="$edate" '$2 >= start && $2 <= end {print $0}' area.csv > area_time.csv
+			awk -F ";" -v start="$sdate" -v end="$edate" '$2 >= start && $2 <= end {print $0}' $file > area.csv
 		else 
 			echo date one is greater than date two
 			exit 1
@@ -191,7 +187,29 @@ if [ "$d" -eq "1" ] ; then
 		exit 1
 	fi
 else
-	cat area.csv > area_time.csv
+	$file > area.csv
+fi
+if [ "$F" -eq 1 ] ; then
+	grep -E '81408|81401|81405|81415|71805|78894|78890|78897|78925|78922|61997|61996|61972|61980|61976|67005|61968|89642|61998' -v  area.csv > area_time.csv ; nbLoa=$((nbLoca+1)) ;
+fi
+if [ "$G" -eq 1 ] ; then
+	grep -E '81408|81401|81405|81415' area.csv > area_time.csv ; nbLoca=$((nbLoca+1)) ;
+fi
+if [ "$S" -eq 1 ] ; then
+	grep "71805" area.csv > area_time.csv ;
+fi
+if [ "$A" -eq 1 ] ; then
+	grep -E '78894|78890|78897|78925|78922' area.csv > area_time.csv ;
+fi
+if [ "$O" -eq 1 ] ; then
+	grep -E '61998|61997|61996|61972|61980|61976|67005|61968' area.csv > area_time.csv ;
+fi
+if [ "$Q" -eq 1 ] ; then
+	grep -E "89642" area.csv > area_time.csv ; nbLoca=$((nbLoca+1)) ;
+fi
+if [ "$nbExecC" -eq 0 ] ; then
+	echo "vous devez spécifier au moins un type de donnée a traiter, si vous ne savez pas de quoi il s'agit, tapez l'argument -help"
+	exit 1
 fi
 if [ "$a" -eq "1" ] && [ "$g" -eq "1" ] ; then
 awk -F ';' '$14 ~ /^[0-9.-]+,[0-9.-]+$/ { 
@@ -258,6 +276,7 @@ for var in nbExecC ; do
 	if [ "$w" -eq 1 ]; then
 		cut -d ';' -f 1,4,5 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
+		gnuplot -persist w.plt
 	fi
 	if [ "$m" -eq 1 ]; then
 		cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
