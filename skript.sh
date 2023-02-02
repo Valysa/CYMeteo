@@ -1,10 +1,10 @@
 #!/bin/bash
-if [ -e c ] ; then
+if [ -e c.o ] ; then
     echo "le fichier c compilé existe"
 else
     echo "le fichier c compilé n'existe pas"
-    gcc -o c c.c
-    if [ -e c ] ; then
+    gcc -o c.o c.c
+    if [ -e c.o ] ; then
 		echo "l'élément a bien été compiled"
 	else
 		echo "ba carrément la compilation elle marche pas il se passe des bails sombres avec le gcc"
@@ -204,8 +204,8 @@ echo $mode
 # echo $nameOutpout
 for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
-		cut -d ';' -f 1,11,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode
+		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
+		./c.o -f$nameOutpout -odata.txt -t1 --$mode
 		gnuplot -persist t1.plt
 	fi
 	if [ "$t2" -eq 1 ]; then
@@ -218,7 +218,7 @@ for var in nbExecC ; do
 	fi
 	if [ "$p1" -eq 1 ]; then
 		cut -d ';' -f 1,7 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode
+		./c.o -f$nameOutpout -odata.txt -p1 --$mode
 		gnuplot -persist t1.plt
 	fi
 	if [ "$p2" -eq 1 ]; then
@@ -235,12 +235,12 @@ for var in nbExecC ; do
 	fi
 	if [ "$m" -eq 1 ]; then
 		cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -m --$mode
+		./c.o -f$nameOutpout -odata.txt -m --$mode
 		#gnuplot -persist m.plt
 	fi
 	if [ "$h" -eq 1 ]; then
-		cut -d ';' -f 1,14 --output-delimiter=';' finale.txt| grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode
+		cut -d ';' -f 1,14,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
+		./c.o -f$nameOutpout -odata.txt -h --$mode
 		gnuplot -persist h.plt
 	fi
 done
