@@ -231,7 +231,7 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, float x, float y, floa
 	else if(pTree->IDstat<n){
 		pTree->pRight=insertionAVL(pTree->pRight, n, val, x, y, o, w, h);
 	}
-	else{ //si l'Ã©lÃ©ment est dÃ©jÃ  dans l'arbre
+	else{ //si l'‚l‚ment est d‚j… dans l'arbre
 		*h=0;
 		pTree->value++;
 		pTree->moy=pTree->moy+val;
@@ -241,10 +241,10 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, float x, float y, floa
 		pTree->wind_moy=pTree->wind_moy+w;
 		return pTree;
 	}
-	if(*h!=0){ //si le facteur d'Ã©quilibre est diffÃ©rent de 0
-		pTree->equilibre=pTree->equilibre+*h; //mise Ã  jour du facteur d'Ã©quilibre
+	if(*h!=0){ //si le facteur d'‚quilibre est diff‚rent de 0
+		pTree->equilibre=pTree->equilibre+*h; //mise … jour du facteur d'‚quilibre
 		pTree=equilibrerAVL(pTree);
-		if(pTree->equilibre==0){ //si l'arbre est de nouveau Ã©quilibrÃ©
+		if(pTree->equilibre==0){ //si l'arbre est de nouveau ‚quilibr‚
 			*h=0; //ses ancetres ne changent pas
 		}
 		else{
@@ -265,17 +265,17 @@ TreeNode* insertionAVL_t2(TreeNode* pTree, int n, float val, int d, int* h){
 	else if(pTree->date<d){
 		pTree->pRight=insertionAVL_t2(pTree->pRight, n, val, d, h);
 	}
-	else{ //si l'Ã©lÃ©ment est dÃ©jÃ  dans l'arbre
+	else{ //si l'‚l‚ment est d‚j… dans l'arbre
 		*h=0;
 		pTree->value++;
 		pTree->date=d;
 		pTree->moy=pTree->moy+val;
 		return pTree;
 	}
-	if(*h!=0){ //si le facteur d'Ã©quilibre est diffÃ©rent de 0
-		pTree->equilibre=pTree->equilibre+*h; //mise Ã  jour du facteur d'Ã©quilibre
+	if(*h!=0){ //si le facteur d'‚quilibre est diff‚rent de 0
+		pTree->equilibre=pTree->equilibre+*h; //mise … jour du facteur d'‚quilibre
 		pTree=equilibrerAVL(pTree);
-		if(pTree->equilibre==0){ //si l'arbre est de nouveau Ã©quilibrÃ©
+		if(pTree->equilibre==0){ //si l'arbre est de nouveau ‚quilibr‚
 			*h=0; //ses ancetres ne changent pas
 		}
 		else{
@@ -297,14 +297,14 @@ TreeNode* insertionAVL_h(TreeNode* pTree, int n, float val, float x, float y, in
 	else if(pTree->height<val){
 		pTree->pRight=insertionAVL_h(pTree->pRight, n, val, x, y, h);
 	}
-	else{ //si l'Ã©lÃ©ment est dÃ©jÃ  dans l'arbre
+	else{ //si l'‚l‚ment est d‚j… dans l'arbre
 		*h=0;
 		return pTree;
 	}
-	if(*h!=0){ //si le facteur d'Ã©quilibre est diffÃ©rent de 0
-		pTree->equilibre=pTree->equilibre+*h; //mise Ã  jour du facteur d'Ã©quilibre
+	if(*h!=0){ //si le facteur d'‚quilibre est diff‚rent de 0
+		pTree->equilibre=pTree->equilibre+*h; //mise … jour du facteur d'‚quilibre
 		pTree=equilibrerAVL(pTree);
-		if(pTree->equilibre==0){ //si l'arbre est de nouveau Ã©quilibrÃ©
+		if(pTree->equilibre==0){ //si l'arbre est de nouveau ‚quilibr‚
 			*h=0; //ses ancetres ne changent pas
 		}
 		else{
@@ -314,7 +314,7 @@ TreeNode* insertionAVL_h(TreeNode* pTree, int n, float val, float x, float y, in
 	return pTree;
 }
 
-void createFileOut(TreeNode* pTree, char *pArg, char *pArg2){
+void createFileOut(TreeNode* pTree, char *pArg, int i){
 	if(pTree==NULL){
 		exit(1);
 	}
@@ -323,27 +323,26 @@ void createFileOut(TreeNode* pTree, char *pArg, char *pArg2){
 	if(fp1==NULL){
 		exit(3);
 	}
-	if(strcmp(pArg2, "-t1")==0 ||strcmp(pArg2, "-p1")==0){
+	if(i==1){
 		walkthrough_inf_t1(pTree, fp1);
 	}
-	if(strcmp(pArg2, "-t2")==0 ||strcmp(pArg2, "-p2")==0){
+	if(i==2){
 		walkthrough_inf_t2(pTree, fp1);
 	}
-	else if(strcmp(pArg2, "-w")==0){
+	else if(i==4){
 		walkthrough_inf_w(pTree, fp1);
 	}
-	else if(strcmp(pArg2, "-h")==0){
-		puts("yeah");
+	else if(i==5){
 		walkthrough_inf_h(pTree, fp1);
 	}
-	else if(strcmp(pArg2, "-m")==0){
+	else if(i==6){
 		walkthrough_inf_m(pTree, fp1);
 	}
 	free(pTree);
 	fclose(fp1);
 }
 	
-void SortAVLt1(char *pArg, char *pArg2, char *pArg3){
+void SortAVLt1(char *pArg, char *pArg2, int k){
 	TreeNode* pRoot=NULL;
 	int eq=0, i=0, ID=0;
 	float x=0;
@@ -370,10 +369,10 @@ void SortAVLt1(char *pArg, char *pArg2, char *pArg3){
 	}
 	fclose(fp);
 	puts("fin1");
-	createFileOut(pRoot, pArg2, pArg3);
+	createFileOut(pRoot, pArg2, k);
 }
 
-void SortAVL_t2(char *pArg, char *pArg2, char *pArg3){
+void SortAVL_t2(char *pArg, char *pArg2, int k){
 	TreeNode* pRoot=NULL;
 	int eq=0, i=0, d=0;
 	float x=0;
@@ -400,10 +399,10 @@ void SortAVL_t2(char *pArg, char *pArg2, char *pArg3){
 	}
 	fclose(fp);
 	puts("fin1");
-	createFileOut(pRoot, pArg2, pArg3);
+	createFileOut(pRoot, pArg2, k);
 }
 
-void SortAVL_w(char *pArg, char *pArg2, char *pArg3){
+void SortAVL_w(char *pArg, char *pArg2, int k){
 	TreeNode* pRoot=NULL;
 	int eq=0, i=0, ID=0;
 	float o=0, w=0, x=0, y=0;
@@ -430,10 +429,10 @@ void SortAVL_w(char *pArg, char *pArg2, char *pArg3){
 	}
 	fclose(fp);
 	puts("fin w");
-	createFileOut(pRoot, pArg2, pArg3);
+	createFileOut(pRoot, pArg2, k);
 }
 
-void SortAVL_m(char *pArg, char *pArg2, char *pArg3){
+void SortAVL_m(char *pArg, char *pArg2, int k){
 	TreeNode* pRoot=NULL;
 	int eq=0, i=0, ID=0;
 	float x=0, y=0, z=0;
@@ -460,10 +459,10 @@ void SortAVL_m(char *pArg, char *pArg2, char *pArg3){
 	}
 	fclose(fp);
 	puts("fin m");
-	createFileOut(pRoot, pArg2, pArg3);
+	createFileOut(pRoot, pArg2, k);
 }
 
-void SortAVL_h(char *pArg, char *pArg2, char *pArg3){
+void SortAVL_h(char *pArg, char *pArg2, int k){
 	TreeNode* pRoot=NULL;
 	int eq=0, i=0, ID=0;
 	float x=0, y=0, z=0;
@@ -490,7 +489,7 @@ void SortAVL_h(char *pArg, char *pArg2, char *pArg3){
 	}
 	fclose(fp);
 	puts("fin");
-	createFileOut(pRoot, pArg2, pArg3);
+	createFileOut(pRoot, pArg2, k);
 }
 
 TreeNode* ajoutABR_t1(TreeNode* pTree, int n, float val, float x, float y, float o, float w){
@@ -527,7 +526,7 @@ TreeNode* ajoutABR_h(TreeNode* pTree, int n, float val, float x, float y){
 	return pTree;
 }
 
-void SortABR_t1(char *pArg, char *pArg2, char *pArg3){
+void SortABR_t1(char *pArg, char *pArg2, int k){
 	TreeNode* pRoot=NULL;
 	int i=0, ID=0;
 	float x=0;
@@ -553,10 +552,10 @@ void SortABR_t1(char *pArg, char *pArg2, char *pArg3){
 	}
 	fclose(fp);
 	puts("fin1");
-	createFileOut(pRoot, pArg2, pArg3);
+	createFileOut(pRoot, pArg2, k);
 }
 
-void SortABR_w(char *pArg, char *pArg2, char *pArg3){
+void SortABR_w(char *pArg, char *pArg2, int k){
 	TreeNode* pRoot=NULL;
 	int i=0, ID=0;
 	float o=0, w=0, x=0, y=0;
@@ -582,10 +581,10 @@ void SortABR_w(char *pArg, char *pArg2, char *pArg3){
 	}
 	fclose(fp);
 	puts("fin w");
-	createFileOut(pRoot, pArg2, pArg3);
+	createFileOut(pRoot, pArg2, k);
 }
 
-void SortABR_m(char *pArg, char *pArg2, char *pArg3){
+void SortABR_m(char *pArg, char *pArg2, int k){
 	TreeNode* pRoot=NULL;
 	int i=0, ID=0;
 	float x=0, y=0, z=0;
@@ -611,10 +610,10 @@ void SortABR_m(char *pArg, char *pArg2, char *pArg3){
 	}
 	fclose(fp);
 	puts("fin m");
-	createFileOut(pRoot, pArg2, pArg3);
+	createFileOut(pRoot, pArg2, k);
 }
 
-void SortABR_h(char *pArg, char *pArg2, char *pArg3){
+void SortABR_h(char *pArg, char *pArg2, int k){
 	TreeNode* pRoot=NULL;
 	int i=0, ID=0;
 	float x=0, y=0, z=0;
@@ -640,7 +639,7 @@ void SortABR_h(char *pArg, char *pArg2, char *pArg3){
 	}
 	fclose(fp);
 	puts("fin");
-	createFileOut(pRoot, pArg2, pArg3);
+	createFileOut(pRoot, pArg2, k);
 }
 
 void checkFileIn(char* pArg){
@@ -673,36 +672,45 @@ void checkFileOut(char* pArg){
 	printf("\n(%s)", pArg);
 }
 
-void checkMode(char* pArg){
+int checkMode(char* pArg){
 	if(pArg==NULL){
 		exit(4);
 	}
 	if(strcmp(pArg, "-t1")==0){
 		puts("ok t1");
+		return 1;
 	}
 	else if(strcmp(pArg, "-t2")==0){
 		puts("ok t2");
+		return 2;
 	}
 	else if(strcmp(pArg, "-t3")==0){
 		puts("ok t3");
+		return 3;
 	}
 	else if(strcmp(pArg, "-p1")==0){
 		puts("ok p1");
+		return 1;
 	}
 	else if(strcmp(pArg, "-p2")==0){
 		puts("ok p2");
+		return 2;
 	}
 	else if(strcmp(pArg, "-p3")==0){
 		puts("ok p3");
+		return 3;
 	}
 	else if(strcmp(pArg, "-w")==0){
 		puts("ok w");
+		return 4;
 	}
 	else if(strcmp(pArg, "-h")==0){
 		puts("ok h");
+		return 5;
 	}
 	else if(strcmp(pArg, "-m")==0){
 		puts("ok m");
+		return 6;
 	}
 	else{
 		puts("erreur mode");
@@ -712,7 +720,7 @@ void checkMode(char* pArg){
 
 void checkReverse(char* pArg){
 	if(strcmp(pArg, "-r")==0){
-		puts("sens dÃ©croissant");
+		puts("sens d‚croissant");
 	}
 	else if(pArg!=NULL){
 		puts("Erreur du sens de tri");
@@ -723,23 +731,27 @@ void checkReverse(char* pArg){
 	}
 }
 
-void checkTri(char* pArg){
+int checkTri(char* pArg){
 	if(strcmp(pArg, "--tab")==0){
 		puts("tab");
+		return 1;
 	}
 	else if(strcmp(pArg, "--abr")==0){
 		puts("abr");
+		return 2;
 	}
 	else if(strcmp(pArg, "--avl")==0){
 		puts("avl");
+		return 3;
 	}
-	else if(strcmp(pArg, "-r")!=0){ //si le mode de tri n'est pas demandÃ© et que -r est demandÃ©
+	else if(strcmp(pArg, "-r")!=0){ //si le mode de tri n'est pas demand‚ et que -r est demand‚
 		puts("Erreur de tri");
 		exit(1);
 	}
 	else{
-		puts("avl par dÃ©faut");
+		puts("avl par d‚faut");
 		checkReverse(pArg);
+		return 3;
 	}
 }
 
@@ -748,6 +760,7 @@ int main(int argc, char **argv){
 		puts("Erreur de argc");
 		exit(1);
 	}
+	int j=3;
 	printf("%s", argv[1]);
 	puts("");
 	printf("%s", argv[2]);
@@ -757,52 +770,52 @@ int main(int argc, char **argv){
 	checkFileIn(argv[1]);
 	checkFileOut(argv[2]);
 	puts("hey");
-	checkMode(argv[3]);
+	int i=checkMode(argv[3]);
 	puts("cool");
 	if(argc==4){
-		puts("mode avl par dÃ©faut");
+		puts("mode avl par d‚faut");
 	}
 	if(argc>=5){
-		checkTri(*(argv+4));
+		j=checkTri(argv[4]);
 		if(argc==6){
-			checkReverse(*(argv+5));
+			checkReverse(argv[5]);
 		}
 	}
 	puts("");
 	printf("%s", argv[1]);
 	puts("");
 	printf("%s", argv[2]);
-	if(strcmp(argv[4], "--avl")==0){
-		if(strcmp(argv[3], "-t1")==0 || strcmp(argv[3], "-p1")==0){
-			SortAVLt1(argv[1], argv[2], argv[3]);
+	if(j==3){ //if AVL mode is requested
+		if(i==1){
+			SortAVLt1(argv[1], argv[2], i);
 		}
-		if(strcmp(argv[3], "-t2")==0 || strcmp(argv[3], "-p2")==0){
-			SortAVL_t2(argv[1], argv[2], argv[3]);
+		else if(i==2){
+			SortAVL_t2(argv[1], argv[2], i);
 		}
-		else if(strcmp(argv[3], "-m")==0){
-			SortAVL_m(argv[1], argv[2], argv[3]);
+		else if(i==4){
+			SortAVL_w(argv[1], argv[2], i);
 		}
-		else if(strcmp(argv[3], "-h")==0){
-			SortAVL_h(argv[1], argv[2], argv[3]);
+		else if(i==5){
+			SortAVL_h(argv[1], argv[2], i);
 		}
-		else if(strcmp(argv[3], "-w")==0){
-			SortAVL_w(argv[1], argv[2], argv[3]);
-		}
-	}
-	else if(strcmp(argv[4], "--abr")==0){
-		if(strcmp(argv[3], "-t1")==0 || strcmp(argv[3], "-p1")==0){
-			SortABR_t1(argv[1], argv[2], argv[3]);
-		}
-		else if(strcmp(argv[3], "-m")==0){
-			SortABR_m(argv[1], argv[2], argv[3]);
-		}
-		else if(strcmp(argv[3], "-h")==0){
-			SortABR_h(argv[1], argv[2], argv[3]);
-		}
-		else if(strcmp(argv[3], "-w")==0){
-			SortABR_w(argv[1], argv[2], argv[3]);
+		else if(i==6){
+			SortAVL_m(argv[1], argv[2], i);
 		}
 	}
-	//SortAVL_t2(argv[1], argv[2], argv[3]);
+	else if(j==2){ //if ABR mode is requested
+		if(i==1){
+			SortABR_t1(argv[1], argv[2], i);
+		}
+		else if(i==4){
+			SortABR_w(argv[1], argv[2], i);
+		}
+		else if(i==5){
+			SortABR_h(argv[1], argv[2], i);
+		}
+		else if(i==6){
+			SortABR_m(argv[1], argv[2], i);
+		}
+	}
 	return 0 ;
 }
+
