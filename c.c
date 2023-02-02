@@ -18,12 +18,18 @@ typedef struct tree{
 	float height;
 	float longitude;
 	float latitude;
+	float wind_o;
+	float wind_moy;
+	int year;
+	int month;
+	int day;
+	int hour;
 	struct tree* pLeft;
 	struct tree* pRight;
 	int equilibre;
 }TreeNode;
 
-TreeNode* createTree(int n, float val, float x, float y){
+TreeNode* createTree(int n, float val, float x, float z, float o, float w, int y, int m, int d, int h){
 	TreeNode* pTree=malloc(sizeof(TreeNode));
 	if(pTree==NULL){
 		exit(1);
@@ -35,7 +41,13 @@ TreeNode* createTree(int n, float val, float x, float y){
 	pTree->moy=val;
 	pTree->height=val;
 	pTree->longitude=x;
-	pTree->latitude=y;
+	pTree->latitude=z;
+	pTree->wind_o=o;
+	pTree->wind_moy=w;
+	pTree->year=y;
+	pTree->month=m;
+	pTree->day=d;
+	pTree->hour=h;
 	pTree->pLeft=NULL;
 	pTree->pRight=NULL;
 	pTree->equilibre=0;	
@@ -57,6 +69,14 @@ void walkthrough_inf_t1(TreeNode* pTree, FILE *fp1){ //mode t1
 		walkthrough_inf_t1(pTree->pLeft, fp1);
 		fprintf(fp1, "%05d;%f;%f;%f\n", pTree->IDstat, pTree->moy/pTree->value, pTree->min, pTree->max);
 		walkthrough_inf_t1(pTree->pRight, fp1);
+	}
+}
+
+void walkthrough_inf_w(TreeNode* pTree, FILE *fp1){ //mode w
+	if(!isEmpty(pTree)){
+		walkthrough_inf_w(pTree->pLeft, fp1);
+		fprintf(fp1, "%05d;%f;%f\n", pTree->IDstat, pTree->wind_o/pTree->value, pTree->wind_moy/pTree->value);
+		walkthrough_inf_w(pTree->pRight, fp1);
 	}
 }
 
@@ -204,17 +224,52 @@ TreeNode* equilibrerAVL(TreeNode* pTree){
 	return pTree;
 }		
 
-TreeNode* insertionAVL(TreeNode* pTree, int n, float val, float x, float y, int* h){
+TreeNode* insertionAVL(TreeNode* pTree, int n, float val, float x, float y, float o, float w, int* h){
 	if(pTree==NULL){
 		*h=1;
-		return createTree(n, val, x, y);
+		return createTree(n, val, x, y, o, w, 0, 0, 0, 0);
 	}
 	else if(pTree->IDstat>n){
-		pTree->pLeft=insertionAVL(pTree->pLeft, n, val, x, y, h);
+		pTree->pLeft=insertionAVL(pTree->pLeft, n, val, x, y, o, w, h);
 		*h=-*h;
 	}
 	else if(pTree->IDstat<n){
-		pTree->pRight=insertionAVL(pTree->pRight, n, val, x, y, h);
+		pTree->pRight=insertionAVL(pTree->pRight, n, val, x, y, o, w, h);
+	}
+	else{ //si l'élément est déjà dans l'arbre
+		*h=0;
+		pTree->value++;
+		pTree->moy=pTree->moy+val;
+		pTree->min=minf(pTree->min, val);
+		pTree->max=maxf(pTree->max, val);
+		pTree->wind_o=pTree->wind_o+o;
+		pTree->wind_moy=pTree->wind_moy+w;
+		return pTree;
+	}
+	if(*h!=0){ //si le facteur d'équilibre est différent de 0
+		pTree->equilibre=pTree->equilibre+*h; //mise à jour du facteur d'équilibre
+		pTree=equilibrerAVL(pTree);
+		if(pTree->equilibre==0){ //si l'arbre est de nouveau équilibré
+			*h=0; //ses ancetres ne changent pas
+		}
+		else{
+			*h=1;
+		}
+	}
+	return pTree;
+}
+
+TreeNode* insertionAVL_t2(TreeNode* pTree, int n, float val, int y, int m, int d, int h1, int* h){
+	if(pTree==NULL){
+		*h=1;
+		return createTree(n, val, 0, 0, 0, 0, y, m, d, h1);
+	}
+	else if(pTree->IDstat>n){
+		pTree->pLeft=insertionAVL_t2(pTree->pLeft, n, val, y, m, d, h1, h);
+		*h=-*h;
+	}
+	else if(pTree->IDstat<n){
+		pTree->pRight=insertionAVL_t2(pTree->pRight, n, val, y, m, d, h1, h);
 	}
 	else{ //si l'élément est déjà dans l'arbre
 		*h=0;
@@ -237,18 +292,17 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, float x, float y, int*
 	return pTree;
 }
 
-
 TreeNode* insertionAVL_h(TreeNode* pTree, int n, float val, float x, float y, int* h){
 	if(pTree==NULL){
 		*h=1;
-		return createTree(n, val, x, y);
+		return createTree(n, val, x, y, 0, 0, 0, 0, 0, 0);
 	}
 	else if(pTree->height>val){
 		pTree->pLeft=insertionAVL_h(pTree->pLeft, n, val, x, y, h);
 		*h=-*h;
 	}
 	else if(pTree->height<val){
-		pTree->pRight=insertionAVL_h(pTree->pRight, n, val, x,y, h);
+		pTree->pRight=insertionAVL_h(pTree->pRight, n, val, x, y, h);
 	}
 	else{ //si l'élément est déjà dans l'arbre
 		*h=0;
@@ -279,6 +333,9 @@ void createFileOut(TreeNode* pTree, char *pArg, char *pArg2){
 	if(strcmp(pArg2, "-t1")==0 ||strcmp(pArg2, "-p1")==0){
 		walkthrough_inf_t1(pTree, fp1);
 	}
+	else if(strcmp(pArg2, "-w")==0){
+		walkthrough_inf_w(pTree, fp1);
+	}
 	else if(strcmp(pArg2, "-h")==0){
 		puts("yeah");
 		walkthrough_inf_h(pTree, fp1);
@@ -303,7 +360,7 @@ void SortAVLt1(char *pArg, char *pArg2, char *pArg3){
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%d;%f", &ID, &x); 
-		pRoot=insertionAVL(pRoot, ID, x, 0, 0, p1);
+		pRoot=insertionAVL(pRoot, ID, x, 0, 0, 0, 0, p1);
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
@@ -316,6 +373,67 @@ void SortAVLt1(char *pArg, char *pArg2, char *pArg3){
 	}
 	fclose(fp);
 	puts("fin1");
+	createFileOut(pRoot, pArg2, pArg3);
+}
+
+void SortAVL_t2(char *pArg, char *pArg2, char *pArg3){
+	TreeNode* pRoot=NULL;
+	int eq=0, i=0, ID=0, y=0, m=0, d=0, h=0;
+	float x=0;
+	int* p1=&eq;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%d-%d-%dT%d;%f", &ID, &y, &m, &d, &h, &x);
+		printf("\n%d-%d-%d;%d", y, m, d, h); 
+		pRoot=insertionAVL_t2(pRoot, ID, x, y, m, d, h, p1);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin1");
+	createFileOut(pRoot, pArg2, pArg3);
+}
+
+void SortAVL_w(char *pArg, char *pArg2, char *pArg3){
+	TreeNode* pRoot=NULL;
+	int eq=0, i=0, ID=0;
+	float o=0, w=0;
+	int* p1=&eq;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%f;%f", &ID, &o, &w); 
+		pRoot=insertionAVL(pRoot, ID, 0, 0, 0, o, w, p1);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin w");
 	createFileOut(pRoot, pArg2, pArg3);
 }
 
@@ -333,7 +451,7 @@ void SortAVL_m(char *pArg, char *pArg2, char *pArg3){
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%d;%f;%f;%f", &ID, &x, &y, &z);
-		pRoot=insertionAVL(pRoot, ID, x, y, z, p1);
+		pRoot=insertionAVL(pRoot, ID, x, y, z, 0, 0, p1);
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
@@ -345,7 +463,7 @@ void SortAVL_m(char *pArg, char *pArg2, char *pArg3){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin1");
+	puts("fin m");
 	createFileOut(pRoot, pArg2, pArg3);
 }
 
@@ -517,5 +635,9 @@ int main(int argc, char **argv){
 	else if(strcmp(argv[3], "-h")==0){
 		SortAVL_h(argv[1], argv[2], argv[3]);
 	}
+	else if(strcmp(argv[3], "-w")==0){
+		SortAVL_w(argv[1], argv[2], argv[3]);
+	}
+	//SortAVL_t2(argv[1], argv[2], argv[3]);
 	return 0 ;
 }
