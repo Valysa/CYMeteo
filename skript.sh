@@ -36,7 +36,7 @@ for var in $(seq 1 "$#") ; do
 		#FICHIER D'ENTREE
 		'-f') if [ "$f" -eq "0" ] ; then 
 				nbarg=$((nbarg+1)) ; f=1 ;
-				if [ -e $nbarg ] ; then
+				if [ -e ${!nbarg} ] ; then
 					echo ton pere le $nbarg
 					file=$nbarg
 				else
