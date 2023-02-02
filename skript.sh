@@ -159,10 +159,13 @@ if [ "$d" -eq "1" ] ; then
 	if dateTest $syear $smonth $sday && dateTest $eyear $emonth $eday ; then
 		if [ $(date -d "$sdate" +%s) -lt $(date -d "$edate" +%s) ]; then
 			awk -F ";" -v start="$sdate" -v end="$edate" '$2 >= start && $2 <= end {print $0}' area.csv > area_time.csv
-		fi
 		else 
 			echo date one is greater than date two
 			exit 1
+		fi
+	else
+		echo "invalid dates, see --help for help"
+		exit 1
 	fi
 else
 	cat area.csv > area_time.csv
@@ -244,5 +247,3 @@ for var in nbExecC ; do
 		gnuplot -persist h.plt
 	fi
 done
-#rm  data.txt
-rm  area_time.csv

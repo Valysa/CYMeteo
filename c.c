@@ -333,7 +333,7 @@ void SortAVL_h(char *pArg, char *pArg2, char *pArg3){
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%d;%f;%f;%f", &ID, &x, &y, &z);
-		pRoot=insertionAVL_h(pRoot, ID, x, y, z, p1);
+		pRoot=insertionAVL_h(pRoot, ID, z, x, y, p1);
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
