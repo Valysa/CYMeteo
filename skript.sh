@@ -187,10 +187,10 @@ if [ "$d" -eq "1" ] ; then
 		exit 1
 	fi
 else
-	$file > area.csv
+	cat $file > area.csv
 fi
 if [ "$F" -eq 1 ] ; then
-	grep -E '81408|81401|81405|81415|71805|78894|78890|78897|78925|78922|61997|61996|61972|61980|61976|67005|61968|89642|61998' -v  area.csv > area_time.csv ; nbLoa=$((nbLoca+1)) ;
+	grep -E '81408|81401|81405|81415|71805|78894|78890|78897|78925|78922|61997|61996|61972|61980|61976|67005|61968|89642|61998|61970' -v  area.csv > area_time.csv ; nbLoa=$((nbLoca+1)) ;
 fi
 if [ "$G" -eq 1 ] ; then
 	grep -E '81408|81401|81405|81415' area.csv > area_time.csv ; nbLoca=$((nbLoca+1)) ;
@@ -202,7 +202,7 @@ if [ "$A" -eq 1 ] ; then
 	grep -E '78894|78890|78897|78925|78922' area.csv > area_time.csv ;
 fi
 if [ "$O" -eq 1 ] ; then
-	grep -E '61998|61997|61996|61972|61980|61976|67005|61968' area.csv > area_time.csv ;
+	grep -E '61998|61997|61996|61972|61980|61976|67005|61968|61970' area.csv > area_time.csv ;
 fi
 if [ "$Q" -eq 1 ] ; then
 	grep -E "89642" area.csv > area_time.csv ; nbLoca=$((nbLoca+1)) ;
