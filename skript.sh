@@ -274,7 +274,7 @@ for var in nbExecC ; do
 		./c.o -f$nameOutpout -odata.txt -p3 --$mode
 	fi
 	if [ "$w" -eq 1 ]; then
-		cut -d ';' -f 1,4,5 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
+		cut -d ';' -f 1,4,5,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
 		./c.o -f$nameOutpout -odata.txt -w --$mode
 		gnuplot -persist w.plt
 	fi
