@@ -252,7 +252,7 @@ for var in nbExecC ; do
 		gnuplot -persist t1.plt
 	fi
 	if [ "$t2" -eq 1 ]; then
-		cut -d ';' -f 11,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr '-'  > $nameOutpout ;
+		cut -d ';' -f 11,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' > $nameOutpout ;
 		./c.o -f$nameOutpout -odata.txt -t2 --$mode
 	fi
 	if [ "$t3" -eq 1 ]; then
@@ -265,7 +265,7 @@ for var in nbExecC ; do
 		gnuplot -persist t1.plt
 	fi
 	if [ "$p2" -eq 1 ]; then
-		cut -d ';' -f 7,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr '-'  > $nameOutpout ;
+		cut -d ';' -f 7,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' > $nameOutpout ;
 		./c.o -f$nameOutpout -odata.txt -p2 --$mode
 	fi
 	if [ "$p3" -eq 1 ]; then
