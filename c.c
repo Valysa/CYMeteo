@@ -385,7 +385,7 @@ void SortAVL_t2(char *pArg, char *pArg2, int k){
 	}
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
-		fscanf(fp, "%f;%d", &x, &d);
+		fscanf(fp, "%d;%f", &d, &x);
 		pRoot=insertionAVL_t2(pRoot, 0, x, d, p1);
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
@@ -398,7 +398,7 @@ void SortAVL_t2(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin1");
+	puts("fin2");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -775,12 +775,14 @@ int main(int argc, char **argv){
 	if(argc==4){
 		puts("mode avl par d‚faut");
 	}
-	if(argc>=5){
+	else if(argc>=5){
 		j=checkTri(argv[4]);
 		if(argc==6){
 			checkReverse(argv[5]);
 		}
 	}
+	puts("");
+	printf("%d", j);
 	puts("");
 	printf("%s", argv[1]);
 	puts("");
