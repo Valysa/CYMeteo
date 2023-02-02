@@ -1,3 +1,5 @@
 set autoscale
 set size square
-splot "data.txt"  using 2:3
+set datafile separator ";"
+plot "data.txt" using 4:5:($3*cos(2*pi*$2/360)):($3*sin(2*pi*$2/360)) w vectors
+#it sends the orientation and the formulas take it to calculate the coordinates of x2,y2

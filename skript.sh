@@ -46,7 +46,7 @@ for var in $(seq 1 "$#") ; do
 			else
 				if [ -e meteo_filtered_data_v1.csv ] ; then
 					echo "you didn't select a file but meteo_filtered_data_v1.csv looks valid, we are using it"
-					file=$nbarg
+					file=meteo_filtered_data_v1.csv
 				else
 					echo "you need to specify a valid file with -f, --help for help"
 					exit 1
@@ -126,7 +126,7 @@ for var in $(seq 1 "$#") ; do
 		# HELP
 		'-help') echo "help à écrire ptdr" ; exit 1 ;;
 		# CAS GENERAL
-	#	*  ) echo "l'argument ${!var} n'est pas réferencé" ; exit 0 ;;
+	 	#*  ) echo "l'argument ${!var} n'est pas réferencé" ; exit 0 ;;
 	esac
 done
 if [ "$f" -eq 0 ] ; then
