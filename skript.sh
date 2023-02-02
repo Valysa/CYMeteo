@@ -27,12 +27,31 @@ testArea (){
 	return 0
 }
 
-t1=0 ; t2=0 ; t3=0 ; p1=0 ; p2=0 ; p3=0 ; w=0 ; m=0 ; h=0 ; F=0 ; G=0 ; S=0 ; A=0 ; O=0 ; Q=0 ; tab=0 ; abr=0 ; avl=0 ; d=0;
+t1=0 ; t2=0 ; t3=0 ; p1=0 ; p2=0 ; p3=0 ; w=0 ; m=0 ; h=0 ; F=0 ; G=0 ; S=0 ; A=0 ; O=0 ; Q=0 ; tab=0 ; abr=0 ; avl=0 ; d=0; t=0; file=0; f=0;
 var=0 ; nbExecC=0 ; nbLoca=0; nbarg=0; sday=0 ; smonth=0 ; syear=0 ; eday=0; emonth=0; eyear=0; sdate=0; edate=0; a=0; g=0; slong=0 ; slat=0; elong=0 ; elat=0 ;
 nameOutpout=data.txt
 for var in $(seq 1 "$#") ; do
 	nbarg=$var
 	case "${!var}" in
+		#FICHIER D'ENTREE
+		'-f') if [ "$f" -eq "0" ] ; then 
+				nbarg=$((nbarg+1)) ; f=1 ;
+				if [ -e $nbarg ] ; then
+					echo ton pere le $nbarg
+					file=$nbarg
+				else
+					echo "the file you put in entry does not exist"
+					exit;
+				fi
+			else
+				if [ -e meteo_filtered_data_v1.csv ] ; then
+					echo "you didn't select a file but meteo_filtered_data_v1.csv looks valid, we are using it"
+					file=$nbarg
+				else
+					echo "you need to specify a valid file with -f, --help for help"
+					exit 1
+				fi
+			fi ;;
 		# TYPE DE DONNE A ENVOYER AU C
 		'-t1') if test $t1 ; then 
 					echo "on veut la température" ; t1=1 ; nbExecC=$((nbExecC+1))
@@ -63,22 +82,22 @@ for var in $(seq 1 "$#") ; do
 				fi ;;
 		# RECUPERATION DES DONNEES GEOGRAPHIQUES
 		'-F') if testArea $nbLoca ; then 
-				echo "France métropolitaine" ; F=1 ; grep -E '81408|81401|81405|81415|71805|78894|78890|78897|78925|78922|61997|61996|61972|61980|61976|67005|61968|89642|61998' -v  meteo_filtered_data_v1.csv > area.csv ; nbLoa=$((nbLoca+1)) ; nameOutpout=France.txt 
+				echo "France métropolitaine" ; F=1 ; grep -E '81408|81401|81405|81415|71805|78894|78890|78897|78925|78922|61997|61996|61972|61980|61976|67005|61968|89642|61998' -v  $file > area.csv ; nbLoa=$((nbLoca+1)) ; nameOutpout=France.txt 
 			  fi ;;
 		'-G') if testArea $nbLoca ; then 
-				echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;   nameOutpout=Guyane.txt
+				echo "Guyane" ; G=1 ; grep -E '81408|81401|81405|81415' $file > area.csv ; nbLoca=$((nbLoca+1)) ;   nameOutpout=Guyane.txt
 			  fi ;;
 		'-S') if testArea $nbLoca ; then 
-				echo "Saint-Pierre et Michelin" ; S=1 ; grep "71805" meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1))  ;   nameOutpout=Saint_Pierre_Et_Miquelon.txt
+				echo "Saint-Pierre et Michelin" ; S=1 ; grep "71805" $file > area.csv ; nbLoca=$((nbLoca+1))  ;   nameOutpout=Saint_Pierre_Et_Miquelon.txt
 			  fi ;;
 		'-A') if testArea $nbLoca ; then 
-				echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antilles.txt
+				echo "Antilles" ; A=1 ; grep -E '78894|78890|78897|78925|78922' $file > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antilles.txt
 			  fi ;;
 		'-O') if testArea $nbLoca ; then 
-				echo "Ocean indien" ; O=1 ; grep -E '61998|61997|61996|61972|61980|61976|67005|61968' meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Ocean_Indien.txt
+				echo "Ocean indien" ; O=1 ; grep -E '61998|61997|61996|61972|61980|61976|67005|61968' $file > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Ocean_Indien.txt
 			  fi ;;
 		'-Q') if testArea $nbLoca ; then 
-				echo "Antarctique" ; Q=1 ; grep -E "89642" meteo_filtered_data_v1.csv > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antarctique.txt
+				echo "Antarctique" ; Q=1 ; grep -E "89642" $file > area.csv ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antarctique.txt
 			  fi ;;
 		'-g') if [ "$g" -eq "0" ] ; then 
 				nbarg=$((nbarg+1)) ; g=1 ;
@@ -110,6 +129,10 @@ for var in $(seq 1 "$#") ; do
 	#	*  ) echo "l'argument ${!var} n'est pas réferencé" ; exit 0 ;;
 	esac
 done
+if [ "$f" -eq 0 ] ; then
+	echo " -f must be specified --help for more info"
+	exit 1
+fi
 if [ "$nbExecC" -eq 0 ] ; then
 	echo "vous devez spécifier au moins un type de donnée a traiter, si vous ne savez pas de quoi il s'agit, tapez l'argument -help"
 	exit 1
@@ -239,7 +262,7 @@ for var in nbExecC ; do
 	if [ "$m" -eq 1 ]; then
 		cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
 		./c.o -f$nameOutpout -odata.txt -m --$mode
-		#gnuplot -persist m.plt
+		gnuplot -persist h.plt
 	fi
 	if [ "$h" -eq 1 ]; then
 		cut -d ';' -f 1,14,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
