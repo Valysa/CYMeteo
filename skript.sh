@@ -330,6 +330,7 @@ for var in $nbExecC ; do
 		if [ "$?" -eq 0 ] ; then 
 			gnuplot -persist plt_files/t1.plt
 		else 
+			echo $?
 			exitc $?
 		fi
 	fi
