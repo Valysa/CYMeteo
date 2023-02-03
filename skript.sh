@@ -304,8 +304,7 @@ if [ "$abr" -eq 1 ] ; then
 fi
 echo $mode
 # echo $nameOutpout
-nb=0 ;
-for nb in $nbExecC ; do
+for var in $nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
 		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode 
@@ -340,13 +339,13 @@ for nb in $nbExecC ; do
 		gnuplot -persist w.plt
 	fi
 	if [ "$m" -eq 1 ]; then
-		cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -m --$mode
-		gnuplot -persist m.plt
+    cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
+    ./c -f$nameOutpout -odata.txt -m --$mode
+    gnuplot -persist m.plt
 	fi
-	if [ "$h" -eq 1 ]; thenpmuuu
-		cut -d ';' -f 1,14,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -h --$mode
-		gnuplot -persist h.plt
+	if [ "$h" -eq 1 ]; then
+    	cut -d ';' -f 1,14,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
+    	./c -f$nameOutpout -odata.txt -h --$mode
+    	gnuplot -persist h.plt ;
 	fi
 done
