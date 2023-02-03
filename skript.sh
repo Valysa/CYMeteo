@@ -27,6 +27,58 @@ testArea (){
 	return 0
 }
 
+help (){
+	echo "To make the programm works you will need to specify somme arguments
+You do not need to write them in a very specific order they just need to 
+be put in the command after the ./skript.sh
+Here is a list of the argument
+
+  Geographic restriction :
+    -F : for metropolitain France
+    -G : for Guyane
+    -S : for Saint-Pierre et Miquelon
+    -A : for Antilles
+    -O : for Indian Ocean
+    -Q : for Antarctique
+  If you have data coming from another country it should work
+  unless the station IDE are not in the 71000 format.
+  If you want all of your data or if you have data from another country, don't specify
+  this argument
+  Note that you can't many Geographic at once 
+  (for example you can't ask for data in Antarctique and in Guyane simultaneously)
+  
+  Time restriction :
+    -d <YYYY-DD-MM> <YYYY-DD-MM>
+   Note that there is actually no '<>'
+   The data will be restricted to only data between thoose two dates
+   It will send an error if The first one is greater than the second one
+   
+   Sort mode :
+    --avl : to sort in an avl
+    --abr : to sort in an abr
+    --tab : to sort in a tab
+   This refere to the sort in the C programm
+   
+   Your data
+    -f <fileName.csv> : to specify the data you want to use
+   Note that it can be a .txt or basically everything you want
+   Just make sure that you have the rights on tis file, because if not it may send an error
+   
+   Help 
+     --help : to display this section
+   
+   Type of data :
+    -t : for temperatures
+    -p : for pression
+    -w : for wind
+    -m : for moisture
+    -h : for heigt
+   For temperature you will need to specify the mode, modes are :
+    1 : min max and average per station
+    2 : average per day
+    3 : average per day per station
+   So for example if you want the temperature in mode one, enter the argument -t1"
+} 
 t1=0 ; t2=0 ; t3=0 ; p1=0 ; p2=0 ; p3=0 ; w=0 ; m=0 ; h=0 ; F=0 ; G=0 ; S=0 ; A=0 ; O=0 ; Q=0 ; tab=0 ; abr=0 ; avl=0 ; d=0; t=0; file=0; f=0; skip=0;
 var=0 ; nbExecC=0 ; nbLoca=0; nbarg=0; sday=0 ; smonth=0 ; syear=0 ; eday=0; emonth=0; eyear=0; sdate=0; edate=0; a=0; g=0; slong=0 ; slat=0; elong=0 ; elat=0 ;
 nameOutpout=data.txt
@@ -142,7 +194,7 @@ for var in $(seq 1 "$#") ; do
 						echo "You can't ask for many type of sorting simulteanously, type --help for more info"
 					fi ;;
 			# HELP
-			'--help') echo "help à écrire ptdr" ; exit 1 ;;
+			'--help') help ; exit 1 ;;
 			# CAS GENERAL
 			*  ) echo "the  ${!var}  argument does not exist, type --help for mor info" ; exit 0 ;;
 		esac
@@ -239,22 +291,19 @@ if [ "$var" -eq 0 ]; then
 	echo "no sort method asked, the default one is gonna be avl"
 	avl=1
 fi
-mode=0
+mode=avl #so that the default mode is avl  
 if [ "$tab" -eq 1 ] ; then
 	mode=tab
 fi
 if [ "$abr" -eq 1 ] ; then
 	mode=abr
 fi
-if [ "$avl" -eq 1 ] ; then
-	mode=avl
-fi
 echo $mode
 # echo $nameOutpout
 for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
 		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode
+		./c -f$nameOutpout -odata.txt -t1 --$mode 
 		gnuplot -persist t1.plt
 	fi
 	if [ "$t2" -eq 1 ]; then

@@ -231,7 +231,7 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, float x, float y, floa
 	else if(pTree->IDstat<n){
 		pTree->pRight=insertionAVL(pTree->pRight, n, val, x, y, o, w, h);
 	}
-	else{ //si l'‚l‚ment est d‚j… dans l'arbre
+	else{ //si l'ï¿½lï¿½ment est dï¿½jï¿½ dans l'arbre
 		*h=0;
 		pTree->value++;
 		pTree->moy=pTree->moy+val;
@@ -241,10 +241,10 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, float x, float y, floa
 		pTree->wind_moy=pTree->wind_moy+w;
 		return pTree;
 	}
-	if(*h!=0){ //si le facteur d'‚quilibre est diff‚rent de 0
-		pTree->equilibre=pTree->equilibre+*h; //mise … jour du facteur d'‚quilibre
+	if(*h!=0){ //si le facteur d'ï¿½quilibre est diffï¿½rent de 0
+		pTree->equilibre=pTree->equilibre+*h; //mise ï¿½ jour du facteur d'ï¿½quilibre
 		pTree=equilibrerAVL(pTree);
-		if(pTree->equilibre==0){ //si l'arbre est de nouveau ‚quilibr‚
+		if(pTree->equilibre==0){ //si l'arbre est de nouveau ï¿½quilibrï¿½
 			*h=0; //ses ancetres ne changent pas
 		}
 		else{
@@ -265,17 +265,17 @@ TreeNode* insertionAVL_t2(TreeNode* pTree, int n, float val, int d, int* h){
 	else if(pTree->date<d){
 		pTree->pRight=insertionAVL_t2(pTree->pRight, n, val, d, h);
 	}
-	else{ //si l'‚l‚ment est d‚j… dans l'arbre
+	else{ //si l'ï¿½lï¿½ment est dï¿½jï¿½ dans l'arbre
 		*h=0;
 		pTree->value++;
 		pTree->date=d;
 		pTree->moy=pTree->moy+val;
 		return pTree;
 	}
-	if(*h!=0){ //si le facteur d'‚quilibre est diff‚rent de 0
-		pTree->equilibre=pTree->equilibre+*h; //mise … jour du facteur d'‚quilibre
+	if(*h!=0){ //si le facteur d'ï¿½quilibre est diffï¿½rent de 0
+		pTree->equilibre=pTree->equilibre+*h; //mise ï¿½ jour du facteur d'ï¿½quilibre
 		pTree=equilibrerAVL(pTree);
-		if(pTree->equilibre==0){ //si l'arbre est de nouveau ‚quilibr‚
+		if(pTree->equilibre==0){ //si l'arbre est de nouveau ï¿½quilibrï¿½
 			*h=0; //ses ancetres ne changent pas
 		}
 		else{
@@ -297,14 +297,14 @@ TreeNode* insertionAVL_h(TreeNode* pTree, int n, float val, float x, float y, in
 	else if(pTree->height<val){
 		pTree->pRight=insertionAVL_h(pTree->pRight, n, val, x, y, h);
 	}
-	else{ //si l'‚l‚ment est d‚j… dans l'arbre
+	else{ //si l'ï¿½lï¿½ment est dï¿½jï¿½ dans l'arbre
 		*h=0;
 		return pTree;
 	}
-	if(*h!=0){ //si le facteur d'‚quilibre est diff‚rent de 0
-		pTree->equilibre=pTree->equilibre+*h; //mise … jour du facteur d'‚quilibre
+	if(*h!=0){ //si le facteur d'ï¿½quilibre est diffï¿½rent de 0
+		pTree->equilibre=pTree->equilibre+*h; //mise ï¿½ jour du facteur d'ï¿½quilibre
 		pTree=equilibrerAVL(pTree);
-		if(pTree->equilibre==0){ //si l'arbre est de nouveau ‚quilibr‚
+		if(pTree->equilibre==0){ //si l'arbre est de nouveau ï¿½quilibrï¿½
 			*h=0; //ses ancetres ne changent pas
 		}
 		else{
@@ -720,7 +720,7 @@ int checkMode(char* pArg){
 
 void checkReverse(char* pArg){
 	if(strcmp(pArg, "-r")==0){
-		puts("sens d‚croissant");
+		puts("sens dï¿½croissant");
 	}
 	else if(pArg!=NULL){
 		puts("Erreur du sens de tri");
@@ -744,12 +744,12 @@ int checkTri(char* pArg){
 		puts("avl");
 		return 3;
 	}
-	else if(strcmp(pArg, "-r")!=0){ //si le mode de tri n'est pas demand‚ et que -r est demand‚
+	else if(strcmp(pArg, "-r")!=0){ //si le mode de tri n'est pas demandï¿½ et que -r est demandï¿½
 		puts("Erreur de tri");
 		exit(1);
 	}
 	else{
-		puts("avl par d‚faut");
+		puts("avl par dï¿½faut");
 		checkReverse(pArg);
 		return 3;
 	}
@@ -773,7 +773,7 @@ int main(int argc, char **argv){
 	int i=checkMode(argv[3]);
 	puts("cool");
 	if(argc==4){
-		puts("mode avl par d‚faut");
+		puts("mode avl par dï¿½faut");
 	}
 	else if(argc>=5){
 		j=checkTri(argv[4]);
