@@ -259,6 +259,10 @@ if [ "$d" -eq "1" ] ; then
 else
 	cat $file > area.csv
 fi
+if [ "$nbExecC" -eq 0 ] ; then
+	echo "You need to specify at least one type of data, type --help for more info"
+	exit 1
+fi
 if [ "$F" -eq 1 ] ; then
 	grep -E '81408|81401|81405|81415|71805|78894|78890|78897|78925|78922|61997|61996|61972|61980|61976|67005|61968|89642|61998|61970' -v  area.csv > area_time.csv ; nbLoa=$((nbLoca+1)) ;
 fi
@@ -276,10 +280,6 @@ if [ "$O" -eq 1 ] ; then
 fi
 if [ "$Q" -eq 1 ] ; then
 	grep -E "89642" area.csv > area_time.csv ; nbLoca=$((nbLoca+1)) ;
-fi
-if [ "$nbExecC" -eq 0 ] ; then
-	echo "You need to specify at least one type of data, type --help for more info"
-	exit 1
 fi
 if [ "$a" -eq "1" ] && [ "$g" -eq "1" ] ; then
 awk -F ';' '$10 >= slat && $10 <= elat && $11 >= slong && $11 <= elong { print }' slat="$slat" elat="$elat" slong="$slong" elong="$elong" area_time.csv > finale.txt
@@ -300,7 +300,8 @@ if [ "$abr" -eq 1 ] ; then
 fi
 echo $mode
 # echo $nameOutpout
-for var in nbExecC ; do
+nb=0 ;
+for nb in $nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
 		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode 
