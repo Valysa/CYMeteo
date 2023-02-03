@@ -137,10 +137,10 @@ for var in $(seq 1 "$#") ; do
 					fi ;;
 			# RECUPERATION DES DONNEES GEOGRAPHIQUES
 			'-F') if testArea $nbLoca ; then 
-					echo "France métropolitaine" ; F=1 ;  nameOutpout=France.txt 
+					echo "France métropolitaine" ; F=1 ;  nbLoca=$((nbLoca+1)) ; nameOutpout=France.txt 
 				fi ;;
 			'-G') if testArea $nbLoca ; then 
-					echo "Guyane" ; G=1 ;  nameOutpout=Guyane.txt
+					echo "Guyane" ; G=1 ;  nbLoca=$((nbLoca+1)) ;nameOutpout=Guyane.txt
 				fi ;;
 			'-S') if testArea $nbLoca ; then 
 					echo "Saint-Pierre et Michelin" ; S=1 ;  nbLoca=$((nbLoca+1))  ;   nameOutpout=Saint_Pierre_Et_Miquelon.txt
@@ -152,7 +152,7 @@ for var in $(seq 1 "$#") ; do
 					echo "Ocean indien" ; O=1 ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Ocean_Indien.txt
 				fi ;;
 			'-Q') if testArea $nbLoca ; then 
-					echo "Antarctique" ; Q=1 ;  nameOutpout=Antarctique.txt
+					echo "Antarctique" ; Q=1 ;  nbLoca=$((nbLoca+1)) ; nameOutpout=Antarctique.txt
 				fi ;;
 			'-g') if [ "$g" -eq "0" ] ; then 
 					skip=$((skip+1))
@@ -266,12 +266,12 @@ fi
 if [ "$nbExecC" -eq 0 ] ; then
 	echo "You need to specify at least one type of data, type --help for more info"
 	exit 1
-fi
+fi  
 if [ "$F" -eq 1 ] ; then
 	grep -E '81408|81401|81405|81415|71805|78894|78890|78897|78925|78922|61997|61996|61972|61980|61976|67005|61968|89642|61998|61970' -v  area.csv > area_time.csv ; nbLoa=$((nbLoca+1)) ;
 fi
 if [ "$G" -eq 1 ] ; then
-	grep -E '81408|81401|81405|81415' area.csv > area_time.csv ; nbLoca=$((nbLoca+1)) ;
+	grep -E '81408|81401|81405|81415' area.csv > area_time.csv ; 
 fi
 if [ "$S" -eq 1 ] ; then
 	grep "71805" area.csv > area_time.csv ;
@@ -283,7 +283,11 @@ if [ "$O" -eq 1 ] ; then
 	grep -E '61998|61997|61996|61972|61980|61976|67005|61968|61970' area.csv > area_time.csv ;
 fi
 if [ "$Q" -eq 1 ] ; then
-	grep -E "89642" area.csv > area_time.csv ; nbLoca=$((nbLoca+1)) ;
+	grep -E "89642" area.csv > area_time.csv ; 
+fi
+if [ "$nbLoca" -eq 0 ] ; then
+	cat area.csv > area_time.csv
+	nameOutpout=allData.txt ;
 fi
 if [ "$a" -eq "1" ] && [ "$g" -eq "1" ] ; then
 awk -F ';' '$10 >= slat && $10 <= elat && $11 >= slong && $11 <= elong { print }' slat="$slat" elat="$elat" slong="$slong" elong="$elong" area_time.csv > finale.txt
