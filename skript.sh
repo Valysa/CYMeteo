@@ -338,7 +338,7 @@ for nb in $nbExecC ; do
 	if [ "$m" -eq 1 ]; then
 		cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -m --$mode
-		gnuplot -persist h.plt
+		gnuplot -persist m.plt
 	fi
 	if [ "$h" -eq 1 ]; then
 		cut -d ';' -f 1,14,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
