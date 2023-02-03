@@ -302,23 +302,24 @@ fi
 if [ "$abr" -eq 1 ] ; then
 	mode=abr
 fi
-exitc(){
-	if [ "$1" -eq 1 ] ; then
-		echo "Tere is an error with options sent to the c programm"
-		exit 1
-	if
-	if [ "$1" -eq 2 ] ; then
-		echo "Tere is an error with the entry file for the c programm"
+exitc () {
+	if [ "$1" -eq 1 ]; then
+		echo "There is an error with options sent to the c program"
 		exit 1
 	fi
-	if [ "$1" -eq 3 ] ; then
-		echo "Tere is an error with the outpout file for the c programm"
+	if [ "$1" -eq 2 ]; then
+		echo "There is an error with the entry file for the c program"
 		exit 1
 	fi
-	if [ "$1" -eq 4 ] ; then
-		echo "Tere is an internal error in the c"
+	if [ "$1" -eq 3 ]; then
+		echo "There is an error with the output file for the c program"
 		exit 1
 	fi
+	if [ "$1" -eq 4 ]; then
+		echo "There is an internal error in the c program"
+		exit 1
+	fi
+	return 0
 }
 
 for var in $nbExecC ; do
