@@ -983,32 +983,10 @@ void SortABR_h(char *pArg, char *pArg2, int k){
 }
 
 Chainon* addChained(Chainon* pHead, int n, float val, float x, float z, float o, float w, long d){
-  if(pHead==NULL){
-    return createChainon(n, val, 0, 0, 0, 0, 0);
-  }
-  else if(pHead->IDstat>=n){
-    while(pHead->pNext!=NULL && pHead->pNext->IDstat<n){ 
-      pHead=pHead->pNext;
-    }
-    if(pHead->IDstat==n){
-      pHead->value++;
-      pHead->moy=pHead->moy+val;
-      pHead->min=minf(pHead->min, val);
-      pHead->max=maxf(pHead->max, val);
-    }
-    else{
-      Chainon* pNew=createChainon(n, val, 0, 0, 0, 0, 0);
-      if(pNew==NULL) {
-        exit(4);
-      }
-      pNew->pNext=pHead->pNext;
-      pHead->pNext=pNew;
-    }
-  }
-  else{
-    pHead=addStart(pHead, n, val, 0, 0, 0, 0, 0);
-  }
-  return pHead;
+	 if(pHead==NULL){
+		return createChainon(n, val, 0, 0, 0, 0, 0);
+	 }
+		return pHead;
 }	
 
 void SortChainedList_t1(char *pArg, char *pArg2, int k){
@@ -1024,7 +1002,6 @@ void SortChainedList_t1(char *pArg, char *pArg2, int k){
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%d;%f", &ID, &x);
-		puts("hey");
 		pList=addChained(pList, ID, x, 0, 0, 0, 0, 0); 
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
@@ -1053,7 +1030,6 @@ void checkFileIn(char* pArg){
 	for(int i=0; i<n; i++){
 		pArg[i]=pArg[i+2];
 	}
-	printf("\n(%s)", pArg);
 }
 
 void checkFileOut(char* pArg){
@@ -1068,7 +1044,6 @@ void checkFileOut(char* pArg){
 	for(int i=0; i<n; i++){
 		pArg[i]=pArg[i+2];
 	}
-	printf("\n(%s)", pArg);
 }
 
 int checkMode(char* pArg){
@@ -1130,25 +1105,68 @@ void checkReverse(char* pArg){
 	}
 }
 
-int checkTri(char* pArg){
+void Sort(char *pArg2, char* pArg3, int i, int j){
+	if(j==3){ //if AVL mode is requested
+		if(i==1){
+			SortAVLt1(pArg2, pArg3, i);
+		}
+		else if(i==2){
+			SortAVL_t2(pArg2, pArg3, i);
+		}
+		else if(i==3){
+			SortAVL_t3(pArg2, pArg3, i);
+		}
+		else if(i==4){
+			SortAVL_w(pArg2, pArg3, i);
+		}
+		else if(i==5){
+			SortAVL_h(pArg2, pArg3, i);
+		}
+		else if(i==6){
+			SortAVL_m(pArg2, pArg3, i);
+		}
+	}
+	else if(j==2){ //if ABR mode is requested
+		if(i==1){
+			SortABR_t1(pArg2, pArg3, i);
+		}
+		else if(i==2){
+			SortABR_t2(pArg2, pArg3, i);
+		}
+		else if(i==3){
+			SortABR_t3(pArg2, pArg3, i);
+		}
+		else if(i==4){
+			SortABR_w(pArg2, pArg3, i);
+		}
+		else if(i==5){
+			SortABR_h(pArg2, pArg3, i);
+		}
+		else if(i==6){
+			SortABR_m(pArg2, pArg3, i);
+		}
+	}
+	else if(j==1){ //if Chained list mode is requested
+		if(i==1){
+			SortChainedList_t1(pArg2, pArg3, i);
+		}
+	}
+}
+
+int checkTri(char* pArg, char* pArg2, char* pArg3, int i){
 	if(strcmp(pArg, "--tab")==0){
-		puts("tab");
 		return 1;
 	}
 	else if(strcmp(pArg, "--abr")==0){
-		puts("abr");
 		return 2;
 	}
 	else if(strcmp(pArg, "--avl")==0){
-		puts("avl");
 		return 3;
 	}
 	else if(strcmp(pArg, "-r")!=0){ //si le mode de tri n'est pas demand� et que -r est demand�
-		puts("Erreur de tri");
-		exit(1);
+		return 3;
 	}
 	else{
-		puts("avl par d�faut");
 		checkReverse(pArg);
 		return 3;
 	}
@@ -1160,75 +1178,19 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 	int j=3;
-	printf("%s", argv[1]);
-	puts("");
-	printf("%s", argv[2]);
-	puts("");
-	printf("%s", argv[3]);
-	printf("\n%d", argc);
 	checkFileIn(argv[1]);
 	checkFileOut(argv[2]);
-	puts("hey");
 	int i=checkMode(argv[3]);
-	puts("cool");
 	if(argc==4){
 		puts("mode avl par d�faut");
 	}
 	else if(argc>=5){
-		j=checkTri(argv[4]);
+		j=checkTri(argv[4], argv[1], argv[2], i);
 		if(argc==6){
 			checkReverse(argv[5]);
 		}
 	}
-	puts("");
-	printf("%s", argv[1]);
-	puts("");
-	printf("%s", argv[2]);
-	if(j==3){ //if AVL mode is requested
-		if(i==1){
-			SortAVLt1(argv[1], argv[2], i);
-		}
-		else if(i==2){
-			SortAVL_t2(argv[1], argv[2], i);
-		}
-		else if(i==3){
-			SortAVL_t3(argv[1], argv[2], i);
-		}
-		else if(i==4){
-			SortAVL_w(argv[1], argv[2], i);
-		}
-		else if(i==5){
-			SortAVL_h(argv[1], argv[2], i);
-		}
-		else if(i==6){
-			SortAVL_m(argv[1], argv[2], i);
-		}
-	}
-	else if(j==2){ //if ABR mode is requested
-		if(i==1){
-			SortABR_t1(argv[1], argv[2], i);
-		}
-		else if(i==2){
-			SortABR_t2(argv[1], argv[2], i);
-		}
-		else if(i==3){
-			SortABR_t3(argv[1], argv[2], i);
-		}
-		else if(i==4){
-			SortABR_w(argv[1], argv[2], i);
-		}
-		else if(i==5){
-			SortABR_h(argv[1], argv[2], i);
-		}
-		else if(i==6){
-			SortABR_m(argv[1], argv[2], i);
-		}
-	}
-	else if(j==1){
-		if(i==1){
-			SortChainedList_t1(argv[1], argv[2], i);
-		}
-	}
+	Sort(argv[1], argv[2], i, j);
 	return 0 ;
 }
 
