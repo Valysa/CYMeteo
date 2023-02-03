@@ -983,30 +983,32 @@ void SortABR_h(char *pArg, char *pArg2, int k){
 }
 
 Chainon* addChained(Chainon* pHead, int n, float val, float x, float z, float o, float w, long d){
-	if(pHead==NULL){
-		return createChainon(n, val, 0, 0, 0, 0, 0);
-	}
-	else if(pHead->IDstat<n){
-		while(pHead->IDstat<n){ 
-			pHead=pHead->pNext;
-		}
-		Chainon* pNew=createChainon(n, val, 0, 0, 0, 0, 0);
-		if(pNew==NULL) {
-			exit(4);
-		}
-		pNew->pNext=pHead->pNext;
-		pHead->pNext=pNew;
-	}
-	else if(pHead->IDstat<n){ 
-		pHead=addStart(pHead, n, val, 0, 0, 0, 0, 0);
-	}
-	else{
-		pHead->value++;
-		pHead->moy=pHead->moy+val;
-		pHead->min=minf(pHead->min, val);
-		pHead->max=maxf(pHead->max, val);
-	}
-	return pHead;
+  if(pHead==NULL){
+    return createChainon(n, val, 0, 0, 0, 0, 0);
+  }
+  else if(pHead->IDstat>=n){
+    while(pHead->pNext!=NULL && pHead->pNext->IDstat<n){ 
+      pHead=pHead->pNext;
+    }
+    if(pHead->IDstat==n){
+      pHead->value++;
+      pHead->moy=pHead->moy+val;
+      pHead->min=minf(pHead->min, val);
+      pHead->max=maxf(pHead->max, val);
+    }
+    else{
+      Chainon* pNew=createChainon(n, val, 0, 0, 0, 0, 0);
+      if(pNew==NULL) {
+        exit(4);
+      }
+      pNew->pNext=pHead->pNext;
+      pHead->pNext=pNew;
+    }
+  }
+  else{
+    pHead=addStart(pHead, n, val, 0, 0, 0, 0, 0);
+  }
+  return pHead;
 }	
 
 void SortChainedList_t1(char *pArg, char *pArg2, int k){
