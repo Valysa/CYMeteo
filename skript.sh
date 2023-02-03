@@ -302,56 +302,110 @@ fi
 if [ "$abr" -eq 1 ] ; then
 	mode=abr
 fi
-echo $mode
-# echo $nameOutpout
+exitc(){
+	if [ "$1" -eq 1 ] ; then
+		echo "Tere is an error with options sent to the c programm"
+		exit 1
+	if
+	if [ "$1" -eq 2 ] ; then
+		echo "Tere is an error with the entry file for the c programm"
+		exit 1
+	fi
+	if [ "$1" -eq 3 ] ; then
+		echo "Tere is an error with the outpout file for the c programm"
+		exit 1
+	fi
+	if [ "$1" -eq 4 ] ; then
+		echo "Tere is an internal error in the c"
+		exit 1
+	fi
+}
+
 for var in $nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
+		echo "return is $returnc"
 		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c -f$nameOutpout -odata.txt -t1 --$mode 
-		gnuplot -persist plt_files/t1.plt
+		./c -f$nameOutpout -odata.txt -t1 --$mode
+		if [ "$?" -eq 0 ] ; then 
+			gnuplot -persist plt_files/t1.plt
+		else 
+			exitc $?
+		fi
 	fi
 	if [ "$t2" -eq 1 ]; then
 		cut -d ';' -f 11,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t2 --$mode
 		sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1\/\2\/\3/g' data.txt > special.txt
-		gnuplot -persist plt_files/t2.plt
+		if [ "$?" -eq 0 ] ; then 
+			gnuplot -persist plt_files/t2.plt
+		else 
+			exitc $?
+		fi
 	fi
 	if [ "$t3" -eq 1 ]; then
 		cut -d ';' -f 1,2,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t3 --$mode
 		sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1\/\2\/\3/g' data.txt > special.txt
-		gnuplot -persist plt_files/t3.plt
+		if [ "$?" -eq 0 ] ; then 
+			gnuplot -persist plt_files/t3.plt
+		else 
+			exitc $?
+		fi
 	fi
 	if [ "$p1" -eq 1 ]; then
 		cut -d ';' -f 1,7 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -p1 --$mode
-		gnuplot -persist plt_files/p1.plt
+		if [ "$?" -eq 0 ] ; then 
+			gnuplot -persist plt_files/p1.plt
+		else 
+			exitc $?
+		fi
 	fi
 	if [ "$p2" -eq 1 ]; then
 		cut -d ';' -f 7,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -p2 --$mode
 		sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1\/\2\/\3/g' data.txt > special.txt
-		gnuplot -persist plt_files/p2.plt
+		if [ "$?" -eq 0 ] ; then 
+			gnuplot -persist plt_files/p2.plt
+		else 
+			exitc $?
+		fi
 	fi
 	if [ "$p3" -eq 1 ]; then
 		cut -d ';' -f 1,7 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
 		sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1\/\2\/\3/g' data.txt > special.txt
 		./c -f$nameOutpout -odata.txt -p3 --$mode
-		gnuplot -persist plt_files/p3.plt
+		if [ "$?" -eq 0 ] ; then 
+			gnuplot -persist plt_files/p3.plt
+		else 
+			exitc $?
+		fi
 	fi
 	if [ "$w" -eq 1 ]; then
 		cut -d ';' -f 1,4,5,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -w --$mode
-		gnuplot -persist plt_files/w.plt
+		if [ "$?" -eq 0 ] ; then 
+			gnuplot -persist plt_files/w.plt
+		else 
+			exitc $?
+		fi
 	fi
 	if [ "$m" -eq 1 ]; then
     	cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
     	./c -f$nameOutpout -odata.txt -m --$mode
-    	gnuplot -persist plt_files/m.plt
+    	if [ "$?" -eq 0 ] ; then 
+			gnuplot -persist plt_files/m.plt
+		else 
+			exitc $?
+		fi
 	fi
 	if [ "$h" -eq 1 ]; then
     	cut -d ';' -f 1,14,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
     	./c -f$nameOutpout -odata.txt -h --$mode
-    	gnuplot -persist plt_files/h.plt ;
+    	if [ "$?" -eq 0 ] ; then 
+			gnuplot -persist plt_files/h.plt
+		else 
+			exitc $?
+		fi
 	fi
 done
