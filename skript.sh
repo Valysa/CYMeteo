@@ -1,10 +1,10 @@
 #!/bin/bash
-if [ -e c.o ] ; then
+if [ -e c ] ; then
     echo "le fichier c compilé existe"
 else
     echo "le fichier c compilé n'existe pas"
-    gcc -o c.o c.c
-    if [ -e c.o ] ; then
+    gcc -o c c.c
+    if [ -e c ] ; then
 		echo "l'élément a bien été compiled"
 	else
 		echo "ba carrément la compilation elle marche pas il se passe des bails sombres avec le gcc"
@@ -117,7 +117,7 @@ for var in $(seq 1 "$#") ; do
 			syear=${!nbarg::4} ; smonth=${!nbarg:5:2} ; sday=${!nbarg:8:2} ; sdate=${!nbarg}T00:00:00+01:00 ;
 			nbarg=$((nbarg+1)) ;
 			eyear=${!nbarg::4} ; emonth=${!nbarg:5:2} ; eday=${!nbarg:8:2} ; edate=${!nbarg}T23:00:00+01:00 ;;
-			????-??-??) ;;
+			[0123456789][0123456789][0123456789][0123456789]-[0123456789][0123456789]-[0123456789][0123456789]) ;;
 		# TYPE DE TRI DEMANDE
 		'--tab') echo "Le type de tri demandé est par un tableau ou une liste chainée" ; tab=1 ;;
 		'--abr') echo "Le type de tri demandé est un abr" ; abr=1 ;;
@@ -248,43 +248,45 @@ echo $mode
 for var in nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
 		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -t1 --$mode
+		./c -f$nameOutpout -odata.txt -t1 --$mode
 		gnuplot -persist t1.plt
 	fi
 	if [ "$t2" -eq 1 ]; then
-		cut -d ';' -f 11,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -t2 --$mode
+		cut -d ';' -f 11,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
+		./c -f$nameOutpout -odata.txt -t2 --$mode
+		gnuplot -persist t2.plt
 	fi
 	if [ "$t3" -eq 1 ]; then
 		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -t3 --$mode
+		./c -f$nameOutpout -odata.txt -t3 --$mode
 	fi
 	if [ "$p1" -eq 1 ]; then
 		cut -d ';' -f 1,7 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -p1 --$mode
+		./c -f$nameOutpout -odata.txt -p1 --$mode
 		gnuplot -persist t1.plt
 	fi
 	if [ "$p2" -eq 1 ]; then
-		cut -d ';' -f 7,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -p2 --$mode
+		cut -d ';' -f 7,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
+		./c -f$nameOutpout -odata.txt -p2 --$mode
+		gnuplot -persist t2.plt
 	fi
 	if [ "$p3" -eq 1 ]; then
 		cut -d ';' -f 1,7 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -p3 --$mode
+		./c -f$nameOutpout -odata.txt -p3 --$mode
 	fi
 	if [ "$w" -eq 1 ]; then
 		cut -d ';' -f 1,4,5,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -w --$mode
+		./c -f$nameOutpout -odata.txt -w --$mode
 		gnuplot -persist w.plt
 	fi
 	if [ "$m" -eq 1 ]; then
 		cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -m --$mode
+		./c -f$nameOutpout -odata.txt -m --$mode
 		gnuplot -persist h.plt
 	fi
 	if [ "$h" -eq 1 ]; then
 		cut -d ';' -f 1,14,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
-		./c.o -f$nameOutpout -odata.txt -h --$mode
+		./c -f$nameOutpout -odata.txt -h --$mode
 		gnuplot -persist h.plt
 	fi
 done
