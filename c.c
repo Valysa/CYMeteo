@@ -324,9 +324,10 @@ void createFileOut(TreeNode* pTree, char *pArg, int i){
 		exit(3);
 	}
 	if(i==1){
+		puts("oui");
 		walkthrough_inf_t1(pTree, fp1);
 	}
-	if(i==2){
+	else if(i==2){
 		walkthrough_inf_t2(pTree, fp1);
 	}
 	else if(i==4){
@@ -496,10 +497,10 @@ TreeNode* ajoutABR_t1(TreeNode* pTree, int n, float val, float x, float y, float
 	if(pTree==NULL){
 		return createTree(n, val, x, y, o, w, 0);
 	}
-	else if(pTree->IDstat>val){
+	else if(pTree->IDstat>n){
 		pTree->pLeft=ajoutABR_t1(pTree->pLeft, n, val, x, y, o, w);
 	}
-	else if(pTree->IDstat<val){
+	else if(pTree->IDstat<n){
 		pTree->pRight=ajoutABR_t1(pTree->pRight, n, val, x, y, o, w);
 	}
 	else{
@@ -536,6 +537,7 @@ void SortABR_t1(char *pArg, char *pArg2, int k){
 	if(fp==NULL){
 		exit(3);
 	}
+	puts("ça marche");
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%d;%f", &ID, &x); 
@@ -781,8 +783,6 @@ int main(int argc, char **argv){
 			checkReverse(argv[5]);
 		}
 	}
-	puts("");
-	printf("%d", j);
 	puts("");
 	printf("%s", argv[1]);
 	puts("");
