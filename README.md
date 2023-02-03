@@ -1,4 +1,4 @@
-<strong> CYMeteo </strong> by two anonymos super strong devs from preing 2 (one is gonna fail his year please help him)
+<strong> CYMeteo </strong> byJules Bellêtre and Julien Guyot
 
 SUMMARY
 
