@@ -312,6 +312,7 @@ for var in $nbExecC ; do
 	fi
 	if [ "$t2" -eq 1 ]; then
 		cut -d ';' -f 11,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
+		sed -i -r "s/^(\/{4})/\1,/;s/^(\/{7})/\1,/;s/^(\/{9})/\1,/" $(dirname "$0")/$nameOutpout
 		./c -f$nameOutpout -odata.txt -t2 --$mode
 		gnuplot -persist t2.plt
 	fi
