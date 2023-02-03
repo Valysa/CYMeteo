@@ -308,45 +308,50 @@ for var in $nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
 		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode 
-		gnuplot -persist t1.plt
+		gnuplot -persist plt_files/t1.plt
 	fi
 	if [ "$t2" -eq 1 ]; then
 		cut -d ';' -f 11,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
-		sed -i -r "s/^(\/{4})/\1,/;s/^(\/{7})/\1,/;s/^(\/{9})/\1,/" $(dirname "$0")/$nameOutpout
 		./c -f$nameOutpout -odata.txt -t2 --$mode
-		gnuplot -persist t2.plt
+		sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1\/\2\/\3/g' data.txt > special.txt
+		gnuplot -persist plt_files/t2.plt
 	fi
 	if [ "$t3" -eq 1 ]; then
 		cut -d ';' -f 1,2,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t3 --$mode
+		sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1\/\2\/\3/g' data.txt > special.txt
+		gnuplot -persist plt_files/t3.plt
 	fi
 	if [ "$p1" -eq 1 ]; then
 		cut -d ';' -f 1,7 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -p1 --$mode
-		gnuplot -persist t1.plt
+		gnuplot -persist plt_files/p1.plt
 	fi
 	if [ "$p2" -eq 1 ]; then
 		cut -d ';' -f 7,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -p2 --$mode
-		gnuplot -persist t2.plt
+		sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1\/\2\/\3/g' data.txt > special.txt
+		gnuplot -persist plt_files/p2.plt
 	fi
 	if [ "$p3" -eq 1 ]; then
-		cut -d ';' -f 1,7 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
+		cut -d ';' -f 1,7 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
+		sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1\/\2\/\3/g' data.txt > special.txt
 		./c -f$nameOutpout -odata.txt -p3 --$mode
+		gnuplot -persist plt_files/p3.plt
 	fi
 	if [ "$w" -eq 1 ]; then
 		cut -d ';' -f 1,4,5,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -w --$mode
-		gnuplot -persist w.plt
+		gnuplot -persist plt_files/w.plt
 	fi
 	if [ "$m" -eq 1 ]; then
-    cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
-    ./c -f$nameOutpout -odata.txt -m --$mode
-    gnuplot -persist m.plt
+    	cut -d ';' -f 1,6,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
+    	./c -f$nameOutpout -odata.txt -m --$mode
+    	gnuplot -persist plt_files/m.plt
 	fi
 	if [ "$h" -eq 1 ]; then
     	cut -d ';' -f 1,14,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
     	./c -f$nameOutpout -odata.txt -h --$mode
-    	gnuplot -persist h.plt ;
+    	gnuplot -persist plt_files/h.plt ;
 	fi
 done
