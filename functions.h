@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct tree{
+	float value;
+	int IDstat;
+	float min;
+	float max;
+	float moy;
+	float height;
+	float longitude;
+	float latitude;
+	float wind_o;
+	float wind_moy;
+	long date;
+	struct tree* pLeft;
+	struct tree* pRight;
+	int equilibre;
+}TreeNode;
+
+typedef struct chainon {
+	float value;
+	int IDstat;
+	float min;
+	float max;
+	float moy;
+	float height;
+	float longitude;
+	float latitude;
+	float wind_o;
+	float wind_moy;
+	long date;
+	struct chainon*pNext;
+}Chainon;
+
+Chainon* createChainon(int n, float val, float x, float z, float o, float w, long d);
+void destroyChainon(Chainon* pChainon);
+Chainon* createList();
+Chainon* addStart(Chainon* pHead, int n, float val, float x, float z, float o, float w, long d);
+void addEnd(Chainon* pHead, int n, float val, float x, float z, float o, float w, long d);
+void displayList_t1(Chainon* pHead, FILE *fp1);
+void displayList_t2(Chainon* pHead, FILE *fp1);
+void displayList_t3(Chainon* pHead, FILE *fp1);
+void displayList_w(Chainon* pHead, FILE *fp1);
+void displayList_h(Chainon* pHead, FILE *fp1);
+void displayList_m(Chainon* pHead, FILE *fp1);
+TreeNode* createTree(int n, float val, float x, float z, float o, float w, long d);
+int isEmpty(TreeNode* pTree);
+void walkthrough_inf_t1(TreeNode* pTree, FILE *fp1);
+void walkthrough_inf_t2(TreeNode* pTree, FILE *fp1);
+void walkthrough_inf_t3(TreeNode* pTree, FILE *fp1);
+void walkthrough_inf_w(TreeNode* pTree, FILE *fp1);
+void walkthrough_inf_h(TreeNode* pTree, FILE *fp1);
+void walkthrough_inf_m(TreeNode* pTree, FILE *fp1);
+void createFileOutChainedList(Chainon* pHead, char *pArg, int i);
+float maxf(float a, float b);
+float minf(float a, float b);
+int max(int a, int b);
+int min(int a, int b);
+int max2(int a, int b, int c);
+int min2(int a, int b, int c);
+TreeNode* RotationGauche(TreeNode* pTree);
+TreeNode* RotationDroite(TreeNode* pTree);
+TreeNode* DoubleRotationGauche(TreeNode* pTree);
+TreeNode* DoubleRotationDroite(TreeNode* pTree);
+TreeNode* equilibrerAVL(TreeNode* pTree);
+TreeNode* insertionAVL(TreeNode* pTree, int n, float val, float x, float y, float o, float w, int* h);
+TreeNode* insertionAVL_t2(TreeNode* pTree, int n, float val, long d, int* h);
+TreeNode* insertionAVL_t3(TreeNode* pTree, int n, float val, long d, int* h);
+TreeNode* insertionAVL_h(TreeNode* pTree, int n, float val, float x, float y, int* h);
+void createFileOut(TreeNode* pTree, char *pArg, int i);
+void SortAVLt1(char *pArg, char *pArg2, int k);
+void SortAVL_t2(char *pArg, char *pArg2, int k);
+void SortAVL_t3(char *pArg, char *pArg2, int k);
+void SortAVL_w(char *pArg, char *pArg2, int k);
+void SortAVL_m(char *pArg, char *pArg2, int k);
+void SortAVL_h(char *pArg, char *pArg2, int k);
+TreeNode* ajoutABR_t1(TreeNode* pTree, int n, float val, float x, float y, float o, float w);
+TreeNode* ajoutABR_t2(TreeNode* pTree, int n, float val, long d);
+TreeNode* ajoutABR_t3(TreeNode* pTree, int n, float val, long d);
+TreeNode* ajoutABR_h(TreeNode* pTree, int n, float val, float x, float y);
+void SortABR_t1(char *pArg, char *pArg2, int k);
+void SortABR_t2(char *pArg, char *pArg2, int k);
+void SortABR_t3(char *pArg, char *pArg2, int k);
+void SortABR_w(char *pArg, char *pArg2, int k);
+void SortABR_m(char *pArg, char *pArg2, int k);
+void SortABR_h(char *pArg, char *pArg2, int k);
+Chainon* addChained(Chainon* pHead, int n, float val, float x, float z, float o, float w, long d);
+void SortChainedList_t1(char *pArg, char *pArg2, int k);
+void checkFileIn(char* pArg);
+void checkFileOut(char* pArg);
+int checkMode(char* pArg);
+void checkReverse(char* pArg);
+void Sort(char *pArg2, char* pArg3, int i, int j);
+int checkTri(char* pArg, char* pArg2, char* pArg3, int i);

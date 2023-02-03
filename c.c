@@ -87,13 +87,6 @@ void addEnd(Chainon* pHead, int n, float val, float x, float z, float o, float w
 	pHead->pNext=pNew;
 }	
 
-void displayList(Chainon* pHead) {
-	while(pHead!=NULL) {
-		printf("[%02f]", pHead->value);
-		pHead=pHead->pNext;
-	}
-}
-
 void displayList_t1(Chainon* pHead, FILE *fp1) { //Chained list mode t1 
 	while(pHead!=NULL){
 		fprintf(fp1, "%05d;%f;%f;%f\n", pHead->IDstat, pHead->moy/pHead->value, pHead->min, pHead->max);
@@ -162,12 +155,6 @@ int isEmpty(TreeNode* pTree){
 	return (pTree==NULL);
 }
 
-void process(TreeNode* pTree){
-	if(!isEmpty(pTree)){
-		printf("\n|%ld | %f", pTree->date, pTree->moy);
-	}
-}
-
 void walkthrough_inf_t1(TreeNode* pTree, FILE *fp1){ //mode t1
 	if(!isEmpty(pTree)){
 		walkthrough_inf_t1(pTree->pLeft, fp1);
@@ -213,14 +200,6 @@ void walkthrough_inf_m(TreeNode* pTree, FILE *fp1){ //mode m
 		walkthrough_inf_m(pTree->pRight, fp1);
 		fprintf(fp1, "%f;%d;%f;%f\n", pTree->max, pTree->IDstat, pTree->longitude, pTree->latitude);
 		walkthrough_inf_m(pTree->pLeft, fp1);
-	}
-}
-
-void walkthrough_inf1(TreeNode* pTree){ //parcours infixe
-	if(!isEmpty(pTree)){
-		walkthrough_inf1(pTree->pLeft);
-		process(pTree);
-		walkthrough_inf1(pTree->pRight);
 	}
 }
 
@@ -522,14 +501,12 @@ void createFileOut(TreeNode* pTree, char *pArg, int i){
 		exit(3);
 	}
 	if(i==1){
-		puts("oui");
 		walkthrough_inf_t1(pTree, fp1);
 	}
 	else if(i==2){
 		walkthrough_inf_t2(pTree, fp1);
 	}
 	else if(i==3){
-		puts("yes t3");
 		walkthrough_inf_t3(pTree, fp1);
 	}
 	else if(i==4){
