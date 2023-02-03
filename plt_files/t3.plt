@@ -1,6 +1,6 @@
 set datafile separator ";"
 set timefmt "%Y/%m/%d"
-set xlabel "temperatures"
+set xlabel "Dates"
 set format x "%Y/%m/%d"
 set xdata time
 set ylabel "Pressions"
