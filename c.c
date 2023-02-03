@@ -67,6 +67,14 @@ void walkthrough_inf_t2(TreeNode* pTree, FILE *fp1){ //mode t2
 	}
 }
 
+void walkthrough_inf_t3(TreeNode* pTree, FILE *fp1){ //mode t3
+	if(!isEmpty(pTree)){
+		walkthrough_inf_t3(pTree->pLeft, fp1);
+		fprintf(fp1, "%ld;%d;%f\n", pTree->date, pTree->IDstat, pTree->moy/pTree->value);
+		walkthrough_inf_t3(pTree->pRight, fp1);
+	}
+}
+
 void walkthrough_inf_w(TreeNode* pTree, FILE *fp1){ //mode w
 	if(!isEmpty(pTree)){
 		walkthrough_inf_w(pTree->pLeft, fp1);
@@ -286,6 +294,47 @@ TreeNode* insertionAVL_t2(TreeNode* pTree, int n, float val, long d, int* h){
 	return pTree;
 }
 
+TreeNode* insertionAVL_t3(TreeNode* pTree, int n, float val, long d, int* h){
+	if(pTree==NULL){
+		*h=1;
+		return createTree(n, val, 0, 0, 0, 0, d);
+	}
+	else if(pTree->date>d){
+		pTree->pLeft=insertionAVL_t3(pTree->pLeft, n, val, d, h);
+		*h=-*h;
+	}
+	else if(pTree->date<d){
+		pTree->pRight=insertionAVL_t3(pTree->pRight, n, val, d, h);
+	}
+	else{ //si l'�l�ment est d�j� dans l'arbre
+		if(pTree->IDstat==n){
+			*h=0;
+			pTree->value++;
+			pTree->date=d;
+			pTree->moy=pTree->moy+val;
+			return pTree;
+		}
+		else if(pTree->IDstat>n){
+			pTree->pLeft=insertionAVL_t3(pTree->pLeft, n, val, d, h);
+			*h=-*h;
+		}
+		else if(pTree->IDstat<n){
+			pTree->pRight=insertionAVL_t3(pTree->pRight, n, val, d, h);
+		}
+	}
+	if(*h!=0){ //si le facteur d'�quilibre est diff�rent de 0
+		pTree->equilibre=pTree->equilibre+*h; //mise � jour du facteur d'�quilibre
+		pTree=equilibrerAVL(pTree);
+		if(pTree->equilibre==0){ //si l'arbre est de nouveau �quilibr�
+			*h=0; //ses ancetres ne changent pas
+		}
+		else{
+			*h=1;
+		}
+	}
+	return pTree;
+}
+
 TreeNode* insertionAVL_h(TreeNode* pTree, int n, float val, float x, float y, int* h){
 	if(pTree==NULL){
 		*h=1;
@@ -330,6 +379,10 @@ void createFileOut(TreeNode* pTree, char *pArg, int i){
 	}
 	else if(i==2){
 		walkthrough_inf_t2(pTree, fp1);
+	}
+	else if(i==3){
+		puts("yes t3");
+		walkthrough_inf_t3(pTree, fp1);
 	}
 	else if(i==4){
 		walkthrough_inf_w(pTree, fp1);
@@ -390,6 +443,37 @@ void SortAVL_t2(char *pArg, char *pArg2, int k){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%ld;%f", &d, &x);
 		pRoot=insertionAVL_t2(pRoot, 0, x, d, p1);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin2");
+	createFileOut(pRoot, pArg2, k);
+}
+
+void SortAVL_t3(char *pArg, char *pArg2, int k){
+	TreeNode* pRoot=NULL;
+	int eq=0, i=0, ID=0;
+	long d=0;
+	float x=0;
+	int* p1=&eq;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%ld;%f", &ID, &d, &x);
+		pRoot=insertionAVL_t3(pRoot, ID, x, d, p1);
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
@@ -534,6 +618,32 @@ TreeNode* ajoutABR_t2(TreeNode* pTree, int n, float val, long d){
 	return pTree;
 }
 
+TreeNode* ajoutABR_t3(TreeNode* pTree, int n, float val, long d){
+	if(pTree==NULL){
+		return createTree(n, val, 0, 0, 0, 0, d);
+	}
+	else if(pTree->date>d){
+		pTree->pLeft=ajoutABR_t3(pTree->pLeft, n, val, d);
+	}
+	else if(pTree->date<d){
+		pTree->pRight=ajoutABR_t3(pTree->pRight, n, val, d);
+	}
+	else{
+		if(pTree->IDstat==n){
+			pTree->value++;
+			pTree->moy=pTree->moy+val;
+			pTree->date=d;
+		}
+		else if(pTree->IDstat>n){
+			pTree->pLeft=ajoutABR_t3(pTree->pLeft, n, val, d);
+		}
+		else if(pTree->IDstat<n){
+			pTree->pRight=ajoutABR_t3(pTree->pRight, n, val, d);
+		}
+	}
+	return pTree;
+}
+
 TreeNode* ajoutABR_h(TreeNode* pTree, int n, float val, float x, float y){
 	if(pTree==NULL){
 		return createTree(n, val, x, y, 0, 0, 0);
@@ -592,6 +702,36 @@ void SortABR_t2(char *pArg, char *pArg2, int k){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%ld;%f", &d, &x);
 		pRoot=ajoutABR_t2(pRoot, 0, x, d);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin2");
+	createFileOut(pRoot, pArg2, k);
+}
+
+void SortABR_t3(char *pArg, char *pArg2, int k){
+	TreeNode* pRoot=NULL;
+	int i=0, ID=0;
+	long d=0;
+	float x=0;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%ld;%f", &ID, &d, &x);
+		pRoot=ajoutABR_t3(pRoot, ID, x, d);
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
@@ -844,6 +984,9 @@ int main(int argc, char **argv){
 		else if(i==2){
 			SortAVL_t2(argv[1], argv[2], i);
 		}
+		else if(i==3){
+			SortAVL_t3(argv[1], argv[2], i);
+		}
 		else if(i==4){
 			SortAVL_w(argv[1], argv[2], i);
 		}
@@ -860,6 +1003,9 @@ int main(int argc, char **argv){
 		}
 		else if(i==2){
 			SortABR_t2(argv[1], argv[2], i);
+		}
+		else if(i==3){
+			SortABR_t3(argv[1], argv[2], i);
 		}
 		else if(i==4){
 			SortABR_w(argv[1], argv[2], i);
