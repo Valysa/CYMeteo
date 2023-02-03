@@ -317,7 +317,7 @@ for var in $nbExecC ; do
 		gnuplot -persist t2.plt
 	fi
 	if [ "$t3" -eq 1 ]; then
-		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
+		cut -d ';' -f 1,2,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t3 --$mode
 	fi
 	if [ "$p1" -eq 1 ]; then
