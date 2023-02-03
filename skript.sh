@@ -152,7 +152,6 @@ dayTest (){ # month day year
 			exit 1
 		fi
 	else # month with 30 days
-		echo septembre
 		if [ $2 -gt "30" ] ; then
 			echo "Date entered is not valid --help for more informations"
 			exit 1
@@ -162,11 +161,11 @@ dayTest (){ # month day year
 }
 dateTest (){ #year month day
 	if [ "$1" -ge "2010" ] && [ "$1" -le "2022" ] ; then
-		echo valid year
+		# echo valid year
 		if [ "$2" -ge "0" ] && [ "$2" -le "12" ] ; then
-			echo valid month
+			# echo valid month
 			if dayTest $2 $3 $1 && [ "$3" -ge "0" ] ; then
-				echo valid day
+				# echo valid day
 				return 0
 			fi
 		fi
@@ -211,12 +210,7 @@ if [ "$nbExecC" -eq 0 ] ; then
 	exit 1
 fi
 if [ "$a" -eq "1" ] && [ "$g" -eq "1" ] ; then
-awk -F ';' '$14 ~ /^[0-9.-]+,[0-9.-]+$/ { 
-  split($14,longlat,",") 
-  if (longlat[1] > slong && longlat[1] < elong && longlat[2] > slat && longlat[2] < elat) {
-    print $0 
-  } 
-}' < area_time.csv > finale.txt
+awk -F ';' '$10 >= slat && $10 <= elat && $11 >= slong && $11 <= elong { print }' slat="$slat" elat="$elat" slong="$slong" elong="$elong" area_time.csv > finale.txt
 else
 	cat area_time.csv > finale.txt
 fi
