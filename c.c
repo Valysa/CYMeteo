@@ -1017,6 +1017,6 @@ int main(int argc, char **argv){
 			SortABR_m(argv[1], argv[2], i);
 		}
 	}
-	return 0 ;
+	return 12 ;
 }
 
