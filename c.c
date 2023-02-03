@@ -19,6 +19,123 @@ typedef struct tree{
 	int equilibre;
 }TreeNode;
 
+typedef struct chainon {
+	float value;
+	int IDstat;
+	float min;
+	float max;
+	float moy;
+	float height;
+	float longitude;
+	float latitude;
+	float wind_o;
+	float wind_moy;
+	long date;
+	struct chainon*pNext;
+}Chainon;
+
+Chainon* createChainon(int n, float val, float x, float z, float o, float w, long d) {
+	Chainon* pChainon=NULL;
+	pChainon=malloc(sizeof(Chainon));
+	if(pChainon==NULL) {
+		exit(1);
+	}
+	pChainon->IDstat=n;
+	pChainon->value=1;
+	pChainon->min=val;
+	pChainon->max=val;
+	pChainon->moy=val;
+	pChainon->height=val;
+	pChainon->longitude=x;
+	pChainon->latitude=z;
+	pChainon->wind_o=o;
+	pChainon->wind_moy=w;
+	pChainon->date=d;
+	pChainon->pNext=NULL;
+	return pChainon;
+}
+
+void destroyChainon(Chainon* pChainon) {
+	if(pChainon==NULL) {
+		exit(2);
+	}
+	free(pChainon);
+}
+
+Chainon* createList() {
+	return NULL;
+}
+
+Chainon* addStart(Chainon* pHead, int n, float val, float x, float z, float o, float w, long d) {
+	Chainon* pNew=createChainon(n, val, x, z, o, w, d);
+	if(pNew==NULL) {
+		exit(3);
+	}
+	pNew->pNext=pHead;
+	pHead=pNew;
+	return pHead;
+}
+
+void addEnd(Chainon* pHead, int n, float val, float x, float z, float o, float w, long d) {
+	Chainon* pNew=createChainon(n, val, x, z, o, w, d);
+	if(pNew==NULL) {
+		exit(5);
+	}
+	while(pHead->pNext!=NULL) {
+		pHead=pHead->pNext;
+	}
+	pHead->pNext=pNew;
+}	
+
+void displayList(Chainon* pHead) {
+	while(pHead!=NULL) {
+		printf("[%02f]", pHead->value);
+		pHead=pHead->pNext;
+	}
+}
+
+void displayList_t1(Chainon* pHead, FILE *fp1) { //Chained list mode t1 
+	while(pHead!=NULL){
+		fprintf(fp1, "%05d;%f;%f;%f\n", pHead->IDstat, pHead->moy/pHead->value, pHead->min, pHead->max);
+		pHead=pHead->pNext;
+	}
+}
+
+void displayList_t2(Chainon* pHead, FILE *fp1) { //Chained list mode t2
+	while(pHead!=NULL) {
+		fprintf(fp1, "%ld;%f\n", pHead->date, pHead->moy/pHead->value);
+		pHead=pHead->pNext;
+	}
+}
+
+void displayList_t3(Chainon* pHead, FILE *fp1) { //Chained list mode t3
+	while(pHead!=NULL) {
+		fprintf(fp1, "%ld;%d;%f\n", pHead->date, pHead->IDstat, pHead->moy/pHead->value);
+		pHead=pHead->pNext;
+	}
+}
+
+void displayList_w(Chainon* pHead, FILE *fp1) { //Chained list mode w
+	while(pHead!=NULL) {
+		fprintf(fp1, "%05d;%f;%f;%f;%f\n", pHead->IDstat, pHead->wind_o/pHead->value, pHead->wind_moy/pHead->value, pHead->longitude, pHead->latitude);
+		pHead=pHead->pNext;
+	}
+}
+
+void displayList_h(Chainon* pHead, FILE *fp1) { //Chained list mode h
+	while(pHead!=NULL) {
+		fprintf(fp1, "%f;%d;%f;%f\n", pHead->height, pHead->IDstat, pHead->longitude, pHead->latitude);
+		pHead=pHead->pNext;
+	}
+}
+
+void displayList_m(Chainon* pHead, FILE *fp1) { //Chained list mode m
+	while(pHead!=NULL) {
+		fprintf(fp1, "%f;%d;%f;%f\n", pHead->max, pHead->IDstat, pHead->longitude, pHead->latitude);
+		pHead=pHead->pNext;
+	}
+}
+
 TreeNode* createTree(int n, float val, float x, float z, float o, float w, long d){
 	TreeNode* pTree=malloc(sizeof(TreeNode));
 	if(pTree==NULL){
@@ -105,6 +222,37 @@ void walkthrough_inf1(TreeNode* pTree){ //parcours infixe
 		process(pTree);
 		walkthrough_inf1(pTree->pRight);
 	}
+}
+
+void createFileOutChainedList(Chainon* pHead, char *pArg, int i){ //Sort file for chained list
+	if(pHead==NULL){
+		exit(1);
+	}
+	FILE *fp1=NULL;
+	fp1 = fopen(pArg, "w+");
+	if(fp1==NULL){
+		exit(3);
+	}
+	if(i==1){
+		displayList_t1(pHead, fp1);
+	}
+	else if(i==2){
+		displayList_t2(pHead, fp1);
+	}
+	else if(i==3){
+		displayList_t3(pHead, fp1);
+	}
+	else if(i==4){
+		displayList_w(pHead, fp1);
+	}
+	else if(i==5){
+		displayList_h(pHead, fp1);
+	}
+	else if(i==6){
+		displayList_m(pHead, fp1);
+	}
+	destroyChainon(pHead);
+	fclose(fp1);
 }
 
 float maxf(float a, float b){
@@ -834,6 +982,62 @@ void SortABR_h(char *pArg, char *pArg2, int k){
 	createFileOut(pRoot, pArg2, k);
 }
 
+Chainon* addChained(Chainon* pHead, int n, float val, float x, float z, float o, float w, long d){
+	if(pHead==NULL){
+		return createChainon(n, val, 0, 0, 0, 0, 0);
+	}
+	else if(pHead->IDstat<n){
+		while(pHead->IDstat<n){ 
+			pHead=pHead->pNext;
+		}
+		Chainon* pNew=createChainon(n, val, 0, 0, 0, 0, 0);
+		if(pNew==NULL) {
+			exit(4);
+		}
+		pNew->pNext=pHead->pNext;
+		pHead->pNext=pNew;
+	}
+	else if(pHead->IDstat<n){ 
+		addEnd(pHead, n, val, 0, 0, 0, 0, 0);
+	}
+	else{
+		pHead->value++;
+		pHead->moy=pHead->moy+val;
+		pHead->min=minf(pHead->min, val);
+		pHead->max=maxf(pHead->max, val);
+	}
+	return pHead;
+}	
+
+void SortChainedList_t1(char *pArg, char *pArg2, int k){
+	Chainon* pList=createList();
+	int i=0, ID=0;
+	float x=0;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%f", &ID, &x);
+		pList=addChained(pList, ID, x, 0, 0, 0, 0, 0); 
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin1");
+	createFileOutChainedList(pList, pArg2, k);
+}
+
 void checkFileIn(char* pArg){
 	if(pArg==NULL){
 		exit(4);
@@ -1017,6 +1221,11 @@ int main(int argc, char **argv){
 			SortABR_m(argv[1], argv[2], i);
 		}
 	}
-	return 0 ;
+	else if(j==1){
+		if(i==1){
+			SortChainedList_t1(argv[1], argv[2], i);
+		}
+	}
+	return 12 ;
 }
 
