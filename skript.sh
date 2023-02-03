@@ -1,28 +1,31 @@
 #!/bin/bash
 if [ -e c ] ; then
-    echo "le fichier c compilé existe"
+   # echo "le fichier c compilé existe"
+   echo Starting Program
 else
-    echo "le fichier c compilé n'existe pas"
+   # echo "le fichier c compilé n'existe pas"
     gcc -o c c.c
     if [ -e c ] ; then
-		echo "l'élément a bien été compiled"
+	#	echo "l'élément a bien été compiled"
+	echo Starting Program
 	else
-		echo "ba carrément la compilation elle marche pas il se passe des bails sombres avec le gcc"
+	#	echo "ba carrément la compilation elle marche pas il se passe des bails sombres avec le gcc"
+	exit 1
 	fi
 fi
 
 test (){
 	if [ $1 -eq 1 ] ; then
-		echo "l'argument n'a pas lieu d'être passé plusieurs fois en paramètre"
-		return 1
+		echo "Why would you ask for $1 many times ? Type --help for more info"
+		exit 1
 	fi
 	return 0
 }
 
 testArea (){
 	if [ $1 -eq 1 ] ; then
-		echo "WOOOOOOO SALE FOU T'A PAS LE DROIT DE DEMANDER PLUSIEURS LOCA DIFFERENTES"
-		return 1
+		echo "Unfortunatly, you can't ask for many geographics restrictions at once. Type --help for more info"
+		exit 1
 	fi
 	return 0
 }
@@ -109,50 +112,65 @@ for var in $(seq 1 "$#") ; do
 				fi ;;
 			# TYPE DE DONNE A ENVOYER AU C
 			'-t1') if test $t1 ; then 
-						echo "on veut la température" ; t1=1 ; nbExecC=$((nbExecC+1))
+					#	echo "on veut la température" ;
+						 t1=1 ; nbExecC=$((nbExecC+1))
 				fi ;;
 			'-t2') if test $t2 ; then 
-						echo "on veut la température" ; t2=1 ; nbExecC=$((nbExecC+1)) 
+					#	echo "on veut la température" ; 
+						t2=1 ; nbExecC=$((nbExecC+1)) 
 					fi ;;
 			'-t3') if test $t3 ; then 
-						echo "on veut la température" ; t3=1 ; nbExecC=$((nbExecC+1))
+					#	echo "on veut la température" ; 
+						t3=1 ; nbExecC=$((nbExecC+1))
 					fi ;;
 			'-p1') if test $p1 ; then 
-						echo "on veut la pression" ; p1=1 ; nbExecC=$((nbExecC+1)) 
+					#	echo "on veut la pression" ; 
+						p1=1 ; nbExecC=$((nbExecC+1)) 
 					fi ;;
 			'-p2') if test $p2 ; then 
-						echo "on veut la pression" ; p2=1 ; nbExecC=$((nbExecC+1)) 
+					#	echo "on veut la pression" ; 
+						p2=1 ; nbExecC=$((nbExecC+1)) 
 					fi ;;
 			'-p3') if test $p3 ; then 
-						echo "on veut la pression" ; p3=1 ; nbExecC=$((nbExecC+1)) 
+					#	echo "on veut la pression" ; 
+						p3=1 ; nbExecC=$((nbExecC+1)) 
 					fi ;;
 			'-w') if test $w ; then 
-						echo "on veut le vent" ; w=1 ; nbExecC=$((nbExecC+1)) 
+					#	echo "on veut le vent" ; 
+						w=1 ; nbExecC=$((nbExecC+1)) 
 					fi ;;
 			'-m') if test $m ; then 
-						echo "on veut l'humidité" ; m=1 ; nbExecC=$((nbExecC+1)) 
+					#	echo "on veut l'humidité" ; 
+						m=1 ; nbExecC=$((nbExecC+1)) 
 					fi ;;
 			'-h') if test $h ; then 
-						echo "on veut l'altitude" ; h=1 ; nbExecC=$((nbExecC+1)) 
+					#	echo "on veut l'altitude" ; 
+						h=1 ; nbExecC=$((nbExecC+1)) 
 					fi ;;
 			# RECUPERATION DES DONNEES GEOGRAPHIQUES
 			'-F') if testArea $nbLoca ; then 
-					echo "France métropolitaine" ; F=1 ;  nbLoca=$((nbLoca+1)) ; nameOutpout=France.txt 
+				#	echo "France métropolitaine" ; 
+					F=1 ;  nbLoca=$((nbLoca+1)) ; nameOutpout=France.txt 
 				fi ;;
 			'-G') if testArea $nbLoca ; then 
-					echo "Guyane" ; G=1 ;  nbLoca=$((nbLoca+1)) ;nameOutpout=Guyane.txt
+				#	echo "Guyane" ; 
+					G=1 ;  nbLoca=$((nbLoca+1)) ;nameOutpout=Guyane.txt
 				fi ;;
 			'-S') if testArea $nbLoca ; then 
-					echo "Saint-Pierre et Michelin" ; S=1 ;  nbLoca=$((nbLoca+1))  ;   nameOutpout=Saint_Pierre_Et_Miquelon.txt
+				#	echo "Saint-Pierre et Michelin" ; 
+					S=1 ;  nbLoca=$((nbLoca+1))  ;   nameOutpout=Saint_Pierre_Et_Miquelon.txt
 				fi ;;
 			'-A') if testArea $nbLoca ; then 
-					echo "Antilles" ; A=1 ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antilles.txt
+				#	echo "Antilles" ; 
+					A=1 ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Antilles.txt
 				fi ;;
 			'-O') if testArea $nbLoca ; then 
-					echo "Ocean indien" ; O=1 ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Ocean_Indien.txt
+				#	echo "Ocean indien" ; 
+					O=1 ; nbLoca=$((nbLoca+1)) ;  nameOutpout=Ocean_Indien.txt
 				fi ;;
 			'-Q') if testArea $nbLoca ; then 
-					echo "Antarctique" ; Q=1 ;  nbLoca=$((nbLoca+1)) ; nameOutpout=Antarctique.txt
+				#	echo "Antarctique" ; 
+					Q=1 ;  nbLoca=$((nbLoca+1)) ; nameOutpout=Antarctique.txt
 				fi ;;
 			'-g') if [ "$g" -eq "0" ] ; then 
 					skip=$((skip+1))
@@ -328,7 +346,6 @@ exitc () {
 
 for var in $nbExecC ; do
 	if [ "$t1" -eq 1 ] ; then
-		echo "return is $returnc"
 		cut -d ';' -f 1,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t1 --$mode
 		if [ "$?" -eq 0 ] ; then 
@@ -349,7 +366,7 @@ for var in $nbExecC ; do
 		fi
 	fi
 	if [ "$t3" -eq 1 ]; then
-		cut -d ';' -f 1,2,11 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
+		cut -d ';' -f 1,11,2 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr -d '-' |  tr -d '+' | sed 's/\([0-9]\{8\}\)T.*;/\1;/g' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -t3 --$mode
 		sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1\/\2\/\3/g' data.txt > special.txt
 		if [ "$?" -eq 0 ] ; then 
@@ -415,6 +432,9 @@ for var in $nbExecC ; do
 		fi
 	fi
 done
+rm special.txt 
+rm data.txt
 rm $nameOutpout
 rm area_time.csv
 rm finale.txt
+exit 0

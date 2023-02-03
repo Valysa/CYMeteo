@@ -548,7 +548,7 @@ void SortAVLt1(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin1");
+	puts("Displaying mode 1");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -579,7 +579,7 @@ void SortAVL_t2(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin2");
+	puts("Displaying mode 2");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -610,7 +610,7 @@ void SortAVL_t3(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin2");
+	puts("Displaying mode 3");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -640,7 +640,7 @@ void SortAVL_w(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin w");
+	puts("displaying w");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -670,7 +670,7 @@ void SortAVL_m(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin m");
+	puts("displaying m");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -700,7 +700,7 @@ void SortAVL_h(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin");
+	puts("Displaying h");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -792,7 +792,7 @@ void SortABR_t1(char *pArg, char *pArg2, int k){
 	if(fp==NULL){
 		exit(3);
 	}
-	puts("ça marche");
+	//puts("ça marche");
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%d;%f", &ID, &x); 
@@ -808,7 +808,7 @@ void SortABR_t1(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin1");
+	puts("Displaying mode 1");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -838,7 +838,7 @@ void SortABR_t2(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin2");
+	puts("Displaying mode 2");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -868,7 +868,7 @@ void SortABR_t3(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin2");
+	puts("Displaying mode 3");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -897,7 +897,7 @@ void SortABR_w(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin w");
+	puts("Displaying w");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -926,7 +926,7 @@ void SortABR_m(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin m");
+	puts("Displaying m");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -955,7 +955,7 @@ void SortABR_h(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin");
+	puts("Displaying h");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -1097,7 +1097,7 @@ void SortChainedList_t1(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin1");
+	puts("Displaying mode 1");
 	createFileOutChainedList(pList, pArg2, k);
 }
 
@@ -1127,7 +1127,7 @@ void SortChainedList_t2(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin2");
+	puts("Displaying mode 2");
 	createFileOutChainedList(pList, pArg2, k);
 }
 
@@ -1157,7 +1157,7 @@ void SortChainedList_t3(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin2");
+	puts("Displaying mode 3");
 	createFileOutChainedList(pList, pArg2, k);
 }
 
@@ -1186,7 +1186,7 @@ void SortChainedList_w(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin w");
+	puts("Displaying w");
 	createFileOutChainedList(pList, pArg2, k);
 }
 
@@ -1215,7 +1215,7 @@ void SortChainedList_h(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin");
+	puts("Displaying h");
 	createFileOutChainedList(pList, pArg2, k);
 }
 
@@ -1244,7 +1244,7 @@ void SortChainedList_m(char *pArg, char *pArg2, int k){
 		c=fgetc(fp);
 	}
 	fclose(fp);
-	puts("fin m");
+	puts("Displaying m");
 	createFileOutChainedList(pList, pArg2, k);
 }
 
@@ -1281,39 +1281,39 @@ int checkMode(char* pArg){
 		exit(4);
 	}
 	if(strcmp(pArg, "-t1")==0){
-		puts("ok t1");
+		//puts("ok t1");
 		return 1;
 	}
 	else if(strcmp(pArg, "-t2")==0){
-		puts("ok t2");
+		//puts("ok t2");
 		return 2;
 	}
 	else if(strcmp(pArg, "-t3")==0){
-		puts("ok t3");
+		//puts("ok t3");
 		return 3;
 	}
 	else if(strcmp(pArg, "-p1")==0){
-		puts("ok p1");
+		//puts("ok p1");
 		return 1;
 	}
 	else if(strcmp(pArg, "-p2")==0){
-		puts("ok p2");
+		//puts("ok p2");
 		return 2;
 	}
 	else if(strcmp(pArg, "-p3")==0){
-		puts("ok p3");
+		//puts("ok p3");
 		return 3;
 	}
 	else if(strcmp(pArg, "-w")==0){
-		puts("ok w");
+		//puts("ok w");
 		return 4;
 	}
 	else if(strcmp(pArg, "-h")==0){
-		puts("ok h");
+		//puts("ok h");
 		return 5;
 	}
 	else if(strcmp(pArg, "-m")==0){
-		puts("ok m");
+		//puts("ok m");
 		return 6;
 	}
 	else{
@@ -1427,7 +1427,7 @@ int main(int argc, char **argv){
 	checkFileOut(argv[2]);
 	int i=checkMode(argv[3]);
 	if(argc==4){
-		puts("mode avl par d�faut");
+		//puts("mode avl par d�faut");
 	}
 	else if(argc>=5){
 		j=checkTri(argv[4], argv[1], argv[2], i);
