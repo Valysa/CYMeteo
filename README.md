@@ -55,6 +55,7 @@ SUMMARY
         -f <fileName.csv> : to specify the data you want to use
        Note that it can be a .txt or basically everything you want
        Just make sure that you have the rights on tis file, because if not it may send an error
+       The file in entry has to be in the same directory as the skript.sh
        
        Help 
          --help : to display the help message wich is basically a section of this makefile
@@ -65,21 +66,24 @@ SUMMARY
         -w : for wind
         -m : for moisture
         -h : for heigt
-       For temperature you will need to specify the mode, modes are :
+       For temperature and pression you will need to specify the mode, modes are :
         1 : min max and average per station
         2 : average per day
         3 : average per day per station
        So for example if you want the temperature in mode one, enter the argument -t1
        
 3 Features
+
+      If you type a single character wich is not referenced with a "-" before it,
+      it will tell you a "did you meant..." with the nearest character that is referenced message
       
 4 C Particularities
       
-      Has the program calls a C programm you can run it individually
+      As the program calls a C programm you can run it individually
       for this one the order of argument is important, the arguments are as follow :
       1 : -f<filename.txt> : to specify the name of your datafile (note that there is no space between -f and filename)
       2 : -o<filename.txt> : to specify the name of the file  you want the data to be put in (it doesn't have to already exist)
       3 : -typeofdata : exacly the same as in the script shell
       4 : --mode : to specify the sort mode (optionnal)
-      5 : -r : if you want the data in an other order
+      5 : -r : if you want the data in an other order (optionnal)
      
