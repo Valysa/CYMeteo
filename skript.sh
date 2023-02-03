@@ -415,8 +415,6 @@ for var in $nbExecC ; do
 		fi
 	fi
 done
-rm data.csv
 rm $nameOutpout
-rm area.csv
 rm area_time.csv
 rm finale.txt

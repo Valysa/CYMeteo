@@ -984,7 +984,93 @@ Chainon* addChained_t1(Chainon* pHead, int n, float val, float x, float z, float
         current->wind_moy = current->wind_moy + w;
     }
     return pHead;
-}	
+}
+
+Chainon* addChained_t2(Chainon* pHead, int n, float val, long d) {
+    Chainon *current = pHead;
+    Chainon *previous = NULL;
+    while (current != NULL && current->date < d) {
+        previous = current;
+        current = current->pNext;
+    }
+    if (current == NULL || current->date != d) {
+        Chainon *newNode = createChainon(n, val, 0, 0, 0, 0, d);
+        newNode->pNext = current;
+        if (previous == NULL) {
+            pHead = newNode;
+        } else {
+            previous->pNext = newNode;
+        }
+    } 
+    else {
+        current->value++;
+		current->date=d;
+		current->moy=current->moy+val;
+    }
+    return pHead;
+}
+
+Chainon* addChained_t3(Chainon* pHead, int n, float val, long d) {
+    Chainon *current = pHead;
+    Chainon *previous = NULL;
+    while (current != NULL && current->date < d) {
+        previous = current;
+        current = current->pNext;
+    }
+    if (current == NULL || current->date != d) {
+        Chainon *newNode = createChainon(n, val, 0, 0, 0, 0, d);
+        newNode->pNext = current;
+        if (previous == NULL) {
+            pHead = newNode;
+        } 
+        else {
+            previous->pNext = newNode;
+        }
+    } 
+    else {
+        if(current->IDstat==n){
+			current->value++;
+			current->moy=current->moy+val;
+			current->date=d;
+		}
+		else{
+			while (current != NULL && current->IDstat < n) {
+				previous = current;
+				current = current->pNext;
+			}
+			if (current == NULL || current->IDstat != n) {
+				Chainon *newNode2 = createChainon(n, val, 0, 0, 0, 0, d);
+				newNode2->pNext = current;
+				if (previous == NULL) {
+					pHead = newNode2;
+				} 
+				else {
+					previous->pNext = newNode2;
+				}
+			}
+		}
+    }
+    return pHead;
+}
+
+Chainon* addChained_h(Chainon* pHead, int n, float val, float x, float y) {
+    Chainon *current = pHead;
+    Chainon *previous = NULL;
+    while (current != NULL && current->height < val) {
+        previous = current;
+        current = current->pNext;
+    }
+    if (current == NULL || current->height != val) {
+        Chainon *newNode = createChainon(n, val, x, y, 0, 0, 0);
+        newNode->pNext = current;
+        if (previous == NULL) {
+            pHead = newNode;
+        } else {
+            previous->pNext = newNode;
+        }
+    }
+    return pHead;
+}		
 
 void SortChainedList_t1(char *pArg, char *pArg2, int k){
 	Chainon* pList=createList();
@@ -1015,6 +1101,66 @@ void SortChainedList_t1(char *pArg, char *pArg2, int k){
 	createFileOutChainedList(pList, pArg2, k);
 }
 
+void SortChainedList_t2(char *pArg, char *pArg2, int k){
+	Chainon* pList=createList();
+	int i=0;
+	long d=0;
+	float x=0;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%ld;%f", &d, &x);
+		pList=addChained_t2(pList, 0, x, d);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin2");
+	createFileOutChainedList(pList, pArg2, k);
+}
+
+void SortChainedList_t3(char *pArg, char *pArg2, int k){
+	Chainon* pList=NULL;
+	int i=0, ID=0;
+	long d=0;
+	float x=0;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%ld;%f", &ID, &d, &x);
+		pList=addChained_t3(pList, ID, x, d);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin2");
+	createFileOutChainedList(pList, pArg2, k);
+}
+
 void SortChainedList_w(char *pArg, char *pArg2, int k){
 	Chainon* pList=createList();
 	int i=0, ID=0;
@@ -1041,6 +1187,35 @@ void SortChainedList_w(char *pArg, char *pArg2, int k){
 	}
 	fclose(fp);
 	puts("fin w");
+	createFileOutChainedList(pList, pArg2, k);
+}
+
+void SortChainedList_h(char *pArg, char *pArg2, int k){
+	Chainon* pList=createList();
+	int i=0, ID=0;
+	float x=0, y=0, z=0;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%d;%f;%f;%f", &ID, &x, &y, &z);
+		pList=addChained_h(pList, ID, z, x, y);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin");
 	createFileOutChainedList(pList, pArg2, k);
 }
 
@@ -1205,8 +1380,17 @@ void Sort(char *pArg2, char* pArg3, int i, int j){
 		if(i==1){
 			SortChainedList_t1(pArg2, pArg3, i);
 		}
+		else if(i==2){
+			SortChainedList_t2(pArg2, pArg3, i);
+		}
+		else if(i==3){
+			SortChainedList_t3(pArg2, pArg3, i);
+		}
 		else if(i==4){
 			SortChainedList_w(pArg2, pArg3, i);
+		}
+		else if(i==5){
+			SortChainedList_h(pArg2, pArg3, i);
 		}
 		else if(i==6){
 			SortChainedList_m(pArg2, pArg3, i);
