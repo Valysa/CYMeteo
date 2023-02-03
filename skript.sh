@@ -195,7 +195,11 @@ for var in $(seq 1 "$#") ; do
 					fi ;;
 			# HELP
 			'--help') help ; exit 1 ;;
-			# CAS GENERAL
+		    # DID YOU MEANT
+			'-'[zeZExX]) echo "you typed '${!var}' did you meant -S ?"; exit 1 ;;
+			'-'[rRcCvV]) echo "you typed '${!var}' did you meant -f ?"; exit 1 ;; 
+			'-'[iIkKlL]) echo "you typed '${!var}' did you meant -O ?"; exit 1 ;; 
+ 			# CAS GENERAL
 			*  ) echo "the  ${!var}  argument does not exist, type --help for mor info" ; exit 0 ;;
 		esac
 	fi
@@ -340,7 +344,7 @@ for nb in $nbExecC ; do
 		./c -f$nameOutpout -odata.txt -m --$mode
 		gnuplot -persist m.plt
 	fi
-	if [ "$h" -eq 1 ]; then
+	if [ "$h" -eq 1 ]; thenpmuuu
 		cut -d ';' -f 1,14,10 --output-delimiter=';' finale.txt | grep -E ';$|;;' -v |  tr ',' ';' > $nameOutpout ;
 		./c -f$nameOutpout -odata.txt -h --$mode
 		gnuplot -persist h.plt
