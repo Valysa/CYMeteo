@@ -389,15 +389,7 @@ void SortAVL_t2(char *pArg, char *pArg2, int k){
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
 		fscanf(fp, "%ld;%f", &d, &x);
-		puts("");
-		printf("%d", i);
-		printf("%ld | %f", d, x);
-		puts("vzviz");
 		pRoot=insertionAVL_t2(pRoot, 0, x, d, p1);
-		puts("");
-		puts("aller");
-		//walkthrough_inf1(pRoot);
-		puts("");
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
@@ -524,6 +516,24 @@ TreeNode* ajoutABR_t1(TreeNode* pTree, int n, float val, float x, float y, float
 	return pTree;
 }
 
+TreeNode* ajoutABR_t2(TreeNode* pTree, int n, float val, long d){
+	if(pTree==NULL){
+		return createTree(n, val, 0, 0, 0, 0, d);
+	}
+	else if(pTree->date>d){
+		pTree->pLeft=ajoutABR_t2(pTree->pLeft, n, val, d);
+	}
+	else if(pTree->date<d){
+		pTree->pRight=ajoutABR_t2(pTree->pRight, n, val, d);
+	}
+	else{
+		pTree->value++;
+		pTree->moy=pTree->moy+val;
+		pTree->date=d;
+	}
+	return pTree;
+}
+
 TreeNode* ajoutABR_h(TreeNode* pTree, int n, float val, float x, float y){
 	if(pTree==NULL){
 		return createTree(n, val, x, y, 0, 0, 0);
@@ -564,6 +574,36 @@ void SortABR_t1(char *pArg, char *pArg2, int k){
 	}
 	fclose(fp);
 	puts("fin1");
+	createFileOut(pRoot, pArg2, k);
+}
+
+void SortABR_t2(char *pArg, char *pArg2, int k){
+	TreeNode* pRoot=NULL;
+	int i=0;
+	long d=0;
+	float x=0;
+	int c='a';
+	FILE *fp=NULL;
+	fp = fopen(pArg, "r");
+	if(fp==NULL){
+		exit(3);
+	}
+	while(c!=EOF){
+		fseek(fp, i-1, SEEK_SET);
+		fscanf(fp, "%ld;%f", &d, &x);
+		pRoot=ajoutABR_t2(pRoot, 0, x, d);
+		while(c!='\n') {
+			fseek(fp, i, SEEK_SET);
+			i++;
+			c=fgetc(fp);
+			if(c==EOF){
+				c='\n';
+			}
+		}
+		c=fgetc(fp);
+	}
+	fclose(fp);
+	puts("fin2");
 	createFileOut(pRoot, pArg2, k);
 }
 
@@ -817,6 +857,9 @@ int main(int argc, char **argv){
 	else if(j==2){ //if ABR mode is requested
 		if(i==1){
 			SortABR_t1(argv[1], argv[2], i);
+		}
+		else if(i==2){
+			SortABR_t2(argv[1], argv[2], i);
 		}
 		else if(i==4){
 			SortABR_w(argv[1], argv[2], i);
