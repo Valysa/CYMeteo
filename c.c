@@ -13,13 +13,13 @@ typedef struct tree{
 	float latitude;
 	float wind_o;
 	float wind_moy;
-	int date;
+	long date;
 	struct tree* pLeft;
 	struct tree* pRight;
 	int equilibre;
 }TreeNode;
 
-TreeNode* createTree(int n, float val, float x, float z, float o, float w, int d){
+TreeNode* createTree(int n, float val, float x, float z, float o, float w, long d){
 	TreeNode* pTree=malloc(sizeof(TreeNode));
 	if(pTree==NULL){
 		exit(1);
@@ -47,7 +47,7 @@ int isEmpty(TreeNode* pTree){
 
 void process(TreeNode* pTree){
 	if(!isEmpty(pTree)){
-		printf("\n|%f | %d", pTree->value, pTree->IDstat);
+		printf("\n|%ld | %f", pTree->date, pTree->moy);
 	}
 }
 
@@ -62,7 +62,7 @@ void walkthrough_inf_t1(TreeNode* pTree, FILE *fp1){ //mode t1
 void walkthrough_inf_t2(TreeNode* pTree, FILE *fp1){ //mode t2
 	if(!isEmpty(pTree)){
 		walkthrough_inf_t2(pTree->pLeft, fp1);
-		fprintf(fp1, "%d;%f\n", pTree->date, pTree->moy/pTree->value);
+		fprintf(fp1, "%ld;%f\n", pTree->date, pTree->moy/pTree->value);
 		walkthrough_inf_t2(pTree->pRight, fp1);
 	}
 }
@@ -254,13 +254,14 @@ TreeNode* insertionAVL(TreeNode* pTree, int n, float val, float x, float y, floa
 	return pTree;
 }
 
-TreeNode* insertionAVL_t2(TreeNode* pTree, int n, float val, int d, int* h){
+TreeNode* insertionAVL_t2(TreeNode* pTree, int n, float val, long d, int* h){
 	if(pTree==NULL){
 		*h=1;
 		return createTree(n, val, 0, 0, 0, 0, d);
 	}
 	else if(pTree->date>d){
 		pTree->pLeft=insertionAVL_t2(pTree->pLeft, n, val, d, h);
+		*h=-*h;
 	}
 	else if(pTree->date<d){
 		pTree->pRight=insertionAVL_t2(pTree->pRight, n, val, d, h);
@@ -375,7 +376,8 @@ void SortAVLt1(char *pArg, char *pArg2, int k){
 
 void SortAVL_t2(char *pArg, char *pArg2, int k){
 	TreeNode* pRoot=NULL;
-	int eq=0, i=0, d=0;
+	int eq=0, i=0;
+	long d=0;
 	float x=0;
 	int* p1=&eq;
 	int c='a';
@@ -386,8 +388,16 @@ void SortAVL_t2(char *pArg, char *pArg2, int k){
 	}
 	while(c!=EOF){
 		fseek(fp, i-1, SEEK_SET);
-		fscanf(fp, "%d;%f", &d, &x);
+		fscanf(fp, "%ld;%f", &d, &x);
+		puts("");
+		printf("%d", i);
+		printf("%ld | %f", d, x);
+		puts("vzviz");
 		pRoot=insertionAVL_t2(pRoot, 0, x, d, p1);
+		puts("");
+		puts("aller");
+		//walkthrough_inf1(pRoot);
+		puts("");
 		while(c!='\n') {
 			fseek(fp, i, SEEK_SET);
 			i++;
